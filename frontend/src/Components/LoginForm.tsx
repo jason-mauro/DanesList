@@ -24,7 +24,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <div className="d-flex flex-column bg-transparent ">
+    <div className="d-flex flex-column bg-transparent">
     
     <div className=" border rounded-4 shadow p-5" style={{ minWidth: "450px", background:"#F5F5F4" }}>
     <div className="d-flex flex-column items-center justify-center bg-transparent mb-4">
@@ -91,8 +91,7 @@ const LoginScreen = () => {
           <button
             type="button"
             className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-3 border-0 bg-transparent"
-            onMouseDown={handleHidePassword}
-            onMouseUp={handleHidePassword}
+            onClick={handleHidePassword}
           >
             {hidePassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>

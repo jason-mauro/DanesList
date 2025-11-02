@@ -1,0 +1,20 @@
+/* Signup.css */
+
+/* Remove Bootstrap's default checkmark and icons */
+.was-validated .form-control:valid {
+  background-image: none !important;
+}
+
+.was-validated .form-control:invalid {
+  background-image: none !important;
+}
+
+/* Fix floating label spacing in side-by-side inputs */
+.row .form-floating > .form-control {
+  height: calc(3.5rem + 2px);
+  padding: 1rem 0.75rem;
+}
+
+.row .form-floating > label {
+  left: 0.75rem;
+}
