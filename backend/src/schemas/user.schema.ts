@@ -6,7 +6,7 @@ export const BaseUserSchema = z.object({
     lastName: z.string().min(1, "Last name is required"),
     username: z.string().min(3, "Username must be at least 3 characters long"),
     password: z.string().min(6, "Password must be at least 6 characters long"),
-    email: z.string().email("Invalid email address"),
+    email: z.email("Invalid email address"),
     roleID: z
       .string()
       .refine((val) => Types.ObjectId.isValid(val), {
@@ -21,11 +21,18 @@ roleID: BaseUserSchema.shape.roleID.optional(), // still allow if provided
 export type UserInput = z.infer<typeof UserInputSchema>;
 
 
-export const UserDBSchema = BaseUserSchema.extend({
-_id: z.instanceof(Types.ObjectId),
-createdAt: z.date().optional(),
-updatedAt: z.date().optional(),
+export const UserDBSchema = BaseUserSchema.omit({ password: true, roleID: true }).extend({
+    _id: z.instanceof(Types.ObjectId),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
 });
+
+
+export const UserLoginSchema = z.object({
+  email: z.email("Invalid email"),
+  password: z.string("Password required")
+})
+
 export type User = z.infer<typeof UserDBSchema>;
 
 export const SignupSchema = z
@@ -46,7 +53,7 @@ export const SignupSchema = z
     lastName: data.lastName,
     email: data.email,
     password: data.password,
-    username: data.username.toLowerCase(),
+    username: data.username,
   }))
   
   // Ensures final transformed data matches the validated UserInput schema

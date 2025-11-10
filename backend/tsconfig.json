@@ -10,6 +10,7 @@
     "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
     "types": ["node"],
+    "typeRoots": ["./src/types", "./node_modules/@types"],
 
     /* Type Safety */
     "strict": true,
