@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import Conversation from "../models/conversations.model.js";
 import Message from "../models/messages.model.js";
-
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 // GET /conversations
 export const getUserConversations = async (req: Request, res: Response) => {
@@ -69,8 +69,24 @@ export const sendMessage = async (req: Request, res: Response) => {
             }
         );
 
+        await message.save()
+
         const populated = await message
         .populate("sender", "username avatar");
+
+        const conversation = await Conversation.findById(conversationId);
+        const senderId = req.user?._id.toString();
+
+        const receiverId = conversation?.participants
+            .map(id => id.toString())
+            .find(id => id !== senderId);
+
+
+        const receiverSocketId = getReceiverSocketId(receiverId!);
+		if (receiverSocketId) {
+			// io.to(<socket_id>).emit() used to send events to specific client
+			io.to(receiverSocketId).emit("newMessage", message);
+		}
 
         res.json(populated);
     } catch (error: any){
