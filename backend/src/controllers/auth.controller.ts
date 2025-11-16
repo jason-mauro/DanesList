@@ -1,11 +1,7 @@
 import {Request, Response} from "express";
 import bcrypt from "bcryptjs";
 import { User } from "../models/user.model.js";
-<<<<<<< HEAD
-import { SignupSchema } from "../schemas/user.schema.js";
-=======
 import { SignupSchema, UserLoginSchema } from "../schemas/user.schema.js";
->>>>>>> 6ad7947 (feat(backend): Added routes and controller)
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 
 export const signup = async (req: Request, res: Response) => {
@@ -42,8 +38,6 @@ export const signup = async (req: Request, res: Response) => {
     } catch (error){
         res.status(500).json({ error: "Internal Server Error"});
     }
-<<<<<<< HEAD
-=======
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -82,5 +76,4 @@ export const logout = (req: Request, res: Response) => {
 		console.log("Error in logout controller", error.message);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
->>>>>>> 6ad7947 (feat(backend): Added routes and controller)
 }

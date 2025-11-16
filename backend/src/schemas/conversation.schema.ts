@@ -7,12 +7,8 @@ export const ConversationZodSchema = z.object({
         z.string().refine((val) => Types.ObjectId.isValid(val), { message: "Invalid participantId" })
       )
       .nonempty("Conversation must have at least one participant"),
-  
-    messages: z
-      .array(
-        z.string().refine((val) => Types.ObjectId.isValid(val), { message: "Invalid messageId" })
-      )
-      .default([]),
+
+    lastMessage: z.instanceof(Types.ObjectId).optional()
   });
   
 
