@@ -1,0 +1,51 @@
+/* Card */
+.dl-card {
+  background-color: #f9fafb;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dl-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dl-card-image-wrapper {
+  background-color: #e5e7eb;
+}
+
+.dl-card-image {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.dl-card-body {
+  padding: 10px 12px 14px;
+}
+
+.dl-card-title {
+  font-size: 14px;
+  margin: 0 0 4px;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+
+.dl-card-price {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.dl-card:active {
+  transform: scale(0.98);
+}
+

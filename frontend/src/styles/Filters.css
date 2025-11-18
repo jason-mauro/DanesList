@@ -1,0 +1,63 @@
+/* Filters */
+.dl-filters {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;  /* Align with main content */
+}
+
+.dl-tags-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dl-filter-row {
+  margin-top: 8px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.dl-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dl-filter-label {
+  font-size: 14px;
+  color: #111827;
+}
+
+.dl-select {
+  position: relative;
+  min-width: 220px;
+}
+
+.dl-select select {
+  width: 100%;
+  appearance: none;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 8px 32px 8px 12px;
+  background-color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dl-select select:focus {
+  border-color: #4b5563;
+  box-shadow: 0 0 0 2px rgba(75, 85, 99, 0.25);
+}
+
+.dl-select-caret {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 14px;
+  color: #4b5563;
+}

@@ -1,0 +1,26 @@
+/* Header with brand */
+.dl-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding-left: 20px;
+}
+
+.dl-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dl-logo-img {
+  width: 450px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .dl-logo-img {
+    width: 300px;
+  }
+}
