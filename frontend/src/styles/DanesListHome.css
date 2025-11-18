@@ -1,9 +1,9 @@
 /* Layout */
 .dl-layout {
   display: flex;
-  height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-  background-color: #d4d4d4; /* main grey background */
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #d4d4d4;
 }
 
 /* Sidebar */
@@ -13,6 +13,8 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid #cfcfcf;
+  transition: width 0.3s ease;
+  overflow: hidden;
 }
 
 .dl-sidebar-logo {
@@ -34,11 +36,6 @@
 }
 
 /* Sidebar nav */
-.dl-sidebar-nav {
-  padding: 12px 8px;
-  flex: 1;
-}
-
 .dl-nav-item {
   width: 100%;
   display: flex;
@@ -101,6 +98,7 @@
   align-items: center;
   gap: 10px;
   background-color: #e5e5e5;
+  margin-top: auto;
 }
 
 .dl-avatar {
@@ -128,6 +126,7 @@
 /* Main section */
 .dl-main {
   flex: 1;
+  width: 100%;
   padding: 16px 28px 24px;
   display: flex;
   flex-direction: column;
@@ -362,16 +361,20 @@
 }
 
 /* Sidebar open & closed states */
-.dl-sidebar {
-  width: 260px;
-  transition: width 0.3s ease, transform 0.3s ease;
-  overflow: hidden;
+
+
+.dl-sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px;
 }
+
 
 /* Hide sidebar completely (mobile-like slide-out) */
 .dl-sidebar.closed {
   width: 0;
-  transform: translateX(-100%);
+  overflow: hidden;
 }
 
 /* Dark overlay for small screens (optional) */
@@ -406,10 +409,10 @@
 
 /* Wrap the pagination in a full-width block */
 .dl-pagination-wrapper {
-  width: 100%;
+  margin-top: 24px;
   display: flex;
   justify-content: center;
-  margin-top: 24px;
+  width: 100%;
 }
 
 /* Center the row itself */

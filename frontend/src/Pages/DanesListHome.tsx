@@ -91,7 +91,9 @@ export const DanesListHome = () => {
         {/* Top bar with hamburger & logo text */}
         <header className="dl-header">
           <button className="dl-hamburger" aria-label="Toggle menu" onClick={toggleSidebar}>
-            <img src={RealBurger} alt="Menu" className="dl-burger-img"/>
+            <span> </span>
+            <span> </span>
+            <span> </span>
           </button>
 
           <div className="dl-brand">
