@@ -5,6 +5,7 @@ import "../styles/Signup.css";
 
 const SignupScreen = () => {
   const [hidePassword, setHidePassword] = useState(true);
+  const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -12,9 +13,11 @@ const SignupScreen = () => {
     email: "",
     username: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleHidePassword = () => setHidePassword(!hidePassword);
+  const handleHideConfirmPassword = () => setHideConfirmPassword(!hideConfirmPassword);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -26,7 +29,10 @@ const SignupScreen = () => {
     const form = e.currentTarget;
     if (!form.checkValidity()) {
       e.stopPropagation();
-    } else {
+    } else if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }else {
       console.log("Registering user:", formData);
     }
     setValidated(true);
@@ -124,6 +130,28 @@ const SignupScreen = () => {
               onClick={handleHidePassword}
             >
               {hidePassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+
+          <div className="form-floating mb-4 position-relative">
+            <input
+              type={hideConfirmPassword ? "password" : "text"}
+              className="form-control"
+              id="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="invalid-feedback">Please confirm password</div>
+          
+            <button
+              type="button"
+              className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-3 border-0 bg-transparent"
+              onClick={handleHideConfirmPassword}
+            >
+              {hideConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 

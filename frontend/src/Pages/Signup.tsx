@@ -1,4 +1,4 @@
-import SignupScreen from "../Components/SignupSideBar";
+import SignupScreen from "../Components/SignupFrom";
 import {
   LampDesk, Armchair, Table, Laptop, Shirt, Camera, Headphones, Gamepad2,
   Calculator, Book, Pencil, Pen, Backpack, Bike, Ticket, Coffee, Keyboard,

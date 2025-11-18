@@ -12,7 +12,9 @@
 /* Fix floating label spacing in side-by-side inputs */
 .row .form-floating > .form-control {
   height: calc(3.5rem + 2px);
-  padding: 1rem 0.75rem;
+  padding-top: 1.5rem;
+  padding-bottom: 0.625rem;    
+  line-height: 1.25;
 }
 
 .row .form-floating > label {

@@ -33,6 +33,7 @@ export const UserLoginSchema = z.object({
   password: z.string("Password required")
 })
 
+
 export type User = z.infer<typeof UserDBSchema>;
 
 export const SignupSchema = z
