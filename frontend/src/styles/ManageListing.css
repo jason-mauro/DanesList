@@ -1,0 +1,127 @@
+/* Wrapper centers inside main area */
+.ml-page {
+  padding: 32px 40px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Main card container */
+.ml-container {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Image */
+.ml-image {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* Title */
+.ml-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Tag bubble */
+.ml-tag {
+  display: inline-block;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* Price */
+.ml-price {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+/* Status */
+.ml-status {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* White card sections */
+.ml-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 22px;
+}
+
+.ml-section h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+/* Seller block */
+.ml-seller-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ml-seller-pic {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.ml-seller-name {
+  font-weight: 600;
+}
+
+.ml-seller-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Buttons */
+.ml-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.ml-edit {
+  background: #1f2937;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.ml-sold {
+  background: #6b7280;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.ml-delete {
+  background: #dc2626;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.ml-edit:hover { background: #000; }
+.ml-sold:hover { background: #52525b; }
+.ml-delete:hover { background: #b91c1c; }

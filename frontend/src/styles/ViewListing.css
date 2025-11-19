@@ -1,0 +1,178 @@
+/* Page wrapper */
+/* Page wrapper spans full main area */
+.vl-page {
+  padding: 32px 40px;
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: flex-start; /* keep content at top */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Main form-like container */
+.vl-container {
+  width: 100%;
+  max-width: 800px;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* Listing image */
+.vl-image {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Title */
+.vl-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* Tags */
+.vl-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.vl-tag {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Price */
+.vl-price {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Status */
+.vl-status-label {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* Section cards */
+.vl-section {
+  background: #f9fafb;
+  padding: 18px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.vl-section h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+/* Seller row */
+.vl-seller-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vl-seller-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.vl-seller-name {
+  font-weight: 600;
+}
+
+/* Action button */
+.vl-message-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #111827;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.vl-message-btn:hover {
+  background-color: #000;
+}
+
+/* Confirmation page button row */
+.vl-confirm-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Modify Listing */
+.vl-btn-edit {
+  background: #111827;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Mark Sold */
+.vl-btn-sold {
+  background: #4b5563;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Delete Listing */
+.vl-btn-delete {
+  background: #dc2626;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Wrapper allows overlay positioning */
+.vl-image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* SOLD banner */
+.vl-sold-banner {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background-color: rgba(220, 38, 38, 0.85); /* red with transparency */
+  color: white;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 20px;
+  z-index: 10;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Optional: fade image when sold */
+.vl-image-wrapper.sold img {
+  opacity: 0.6;
+}
