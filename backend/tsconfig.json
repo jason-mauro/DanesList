@@ -25,6 +25,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src", "../frontend/src/utils/api.ts"],
   "exclude": ["node_modules", "dist"]
 }
