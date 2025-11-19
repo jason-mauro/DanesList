@@ -1,12 +1,16 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import "../styles/Signup.css";
+import { signup } from "../utils/api";
 
 const SignupScreen = () => {
+  const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const [validated, setValidated] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,29 +28,59 @@ const SignupScreen = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
+    
     if (!form.checkValidity()) {
       e.stopPropagation();
-    } else if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setValidated(true);
       return;
-    }else {
-      console.log("Registering user:", formData);
     }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match!");
+      setValidated(true);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await signup(formData);
+      console.log("Signup successful:", response);
+      
+      // Store user data if needed
+      localStorage.setItem('user', JSON.stringify(response));
+      
+      // Navigate to home page
+      navigate('/DanesListHome');
+    } catch (err: any) {
+      setError(err.message || "Signup failed. Please try again.");
+      console.error("Signup error:", err);
+    } finally {
+      setLoading(false);
+    }
+
     setValidated(true);
   };
 
   return (
     <div className="border rounded-4 shadow p-5" style={{ minWidth: "450px", background: "#f5f5f4"}}>
-    <div className="text-center mb-4">
+      <div className="text-center mb-4">
         <h2 className="fw-bold" style={{ color: "#1A1A1A", fontSize: "40px" }}>
-            Sign Up
+          Sign Up
         </h2>
         <p className="text" style={{ marginTop: "0px", fontSize: "25px" }}>
-            Create your DanesList account
+          Create your DanesList account
         </p>
+
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
 
         <form
           noValidate
@@ -155,8 +189,12 @@ const SignupScreen = () => {
             </button>
           </div>
 
-          <button type="submit" className="btn btn-dark w-100 py-2 mb-3 rounded-3">
-            Create Account
+          <button 
+            type="submit" 
+            className="btn btn-dark w-100 py-2 mb-3 rounded-3"
+            disabled={loading}
+          >
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 

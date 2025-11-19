@@ -1,7 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
-import { Link } from "react-router-dom";
+import { logout } from "../utils/api";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -9,6 +10,38 @@ type SidebarProps = {
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      // Call logout API to clear token from localStorage
+      await logout();
+      
+      // Navigate to login page
+      navigate("/Login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if API call fails, still clear local data and redirect
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate("/Login");
+    }
+  };
+
+  // Get user info from localStorage to display
+  const getUserName = () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return user.username || "User";
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
+    return "User";
+  };
+
   return (
     <aside className={`dl-sidebar ${isOpen ? "open" : "closed"}`}>
 
@@ -96,12 +129,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       <div className="dl-sidebar-footer">
         <div className="dl-avatar" />
         <div className="dl-avatar-text">
-          <div className="dl-avatar-name">Username</div>
+          <div className="dl-avatar-name">{getUserName()}</div>
           <div className="dl-avatar-signout">
-        <Link to="/Login">
-          Sign out
-        </Link>
-      </div>
+            <button 
+              onClick={handleSignOut}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'inherit',
+                cursor: 'pointer',
+                padding: 0,
+                font: 'inherit',
+                textDecoration: 'underline'
+              }}
+            >
+              Sign out
+            </button>
+          </div>
         </div>
       </div>
     </aside>
