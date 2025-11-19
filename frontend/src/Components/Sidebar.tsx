@@ -44,18 +44,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
   return (
     <aside className={`dl-sidebar ${isOpen ? "open" : "closed"}`}>
-
-      {/* Hamburger inside sidebar */}
-      <button
-        className="dl-sidebar-hamburger"
-        onClick={onToggle}
-        aria-label="Toggle sidebar"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      {/* Hamburger in top-right, NOT wrapped in tooltip */}
+      <button className="dl-sidebar-hamburger" onClick={onToggle}>
+        {isOpen ? "☰" : "✕"}
       </button>
+    
 
+      {/* Logo (hidden when collapsed) */}
       <div className="dl-sidebar-logo">
         <img
           src={DanesListLogoSmall}
@@ -63,74 +58,69 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
           className="dl-logo-small"
         />
       </div>
-      
+
       <nav className="dl-sidebar-nav">
         <div className="dl-tooltip">
-            <button className="dl-nav-item">
-                <span className="dl-nav-icon">＋</span>
-                <div className="dl-nav-text">
-                <span className="dl-nav-title">Create Listing</span>
-                </div>
-            </button>
-
-            {/* Tooltip text */}
-            <span className="dl-tooltip-text">Create Listing</span>
-        </div>
-
-        <div className="dl-tooltip">
-            <button className="dl-nav-item">
-            <span className="dl-nav-icon">📦</span>
+          <button className="dl-nav-item">
+            <span className="dl-nav-icon">＋</span>
             <div className="dl-nav-text">
-                <span className="dl-nav-title">Manage My Listings</span>
-                <span className="dl-nav-subtitle">Menu description.</span>
+              <span className="dl-nav-title">Create Listing</span>
             </div>
-            </button>
-            <span className="dl-tooltip-text">Manage My Listings</span>
+          </button>
+          <span className="dl-tooltip-text">Create Listing</span>
         </div>
 
         <div className="dl-tooltip">
-            <button className="dl-nav-item">
-            <span className="dl-nav-icon">📝</span>
+          <button className="dl-nav-item">
+            <span className="dl-nav-icon">🗒️</span>
             <div className="dl-nav-text">
-                <span className="dl-nav-title">Menu Label</span>
-                <span className="dl-nav-subtitle">Menu description.</span>
+              <span className="dl-nav-title">Manage My Listings</span>
             </div>
-            </button>
-            <span className="dl-tooltip-text">Menu Label</span>
+          </button>
+          <span className="dl-tooltip-text">Manage My Listings</span>
         </div>
 
         <div className="dl-tooltip">
-            <button className="dl-nav-item">
+          <button className="dl-nav-item">
+            <span className="dl-nav-icon">⭐️</span>
+            <div className="dl-nav-text">
+              <span className="dl-nav-title">Favorites</span>
+            </div>
+          </button>
+          <span className="dl-tooltip-text">Favorites</span>
+        </div>
+
+        <div className="dl-tooltip">
+          <button className="dl-nav-item">
             <span className="dl-nav-icon">✉️</span>
             <div className="dl-nav-text dl-nav-text-row">
-                <div>
+              <div>
                 <span className="dl-nav-title">Messages</span>
-                <span className="dl-nav-subtitle">1 Unread</span>
-                </div>
-                <span className="dl-nav-dot" />
+                <span className="dl-nav-subtitle"> 1 Unread</span>
+              </div>
+              <span className="dl-nav-dot" />
             </div>
-            </button>
-            <span className="dl-tooltip-text">Messages</span>
+          </button>
+          <span className="dl-tooltip-text">Messages</span>
         </div>
 
         <div className="dl-tooltip">
-            <button className="dl-nav-item">
-            <span className="dl-nav-icon">⚙️</span>
+          <button className="dl-nav-item">
+            <span className="dl-nav-icon">👤</span>
             <div className="dl-nav-text">
-                <span className="dl-nav-title">Menu Label</span>
-                <span className="dl-nav-subtitle">Menu description.</span>
+              <span className="dl-nav-title">Account</span>
             </div>
-            </button>
-            <span className="dl-tooltip-text">Menu Label</span>
+          </button>
+          <span className="dl-tooltip-text">Account</span>
         </div>
-
-    </nav>
+      </nav>
 
       <div className="dl-sidebar-footer">
         <div className="dl-avatar" />
         <div className="dl-avatar-text">
           <div className="dl-avatar-name">{getUserName()}</div>
           <div className="dl-avatar-signout">
+            <Link to="/Login">Sign out</Link>
             <button 
               onClick={handleSignOut}
               style={{
