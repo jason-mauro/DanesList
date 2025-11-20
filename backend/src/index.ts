@@ -12,9 +12,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Cors configuration
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-}));
+const corsOptions = {
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    optionsSuccessStatus: 200 // For legacy browsers
+  };
+
+app.use(cors(corsOptions))
+
 
 // Middleware
 app.use(express.json());
