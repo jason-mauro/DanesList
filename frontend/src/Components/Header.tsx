@@ -1,4 +1,4 @@
-import React from "react";
+
 import DanesListLogoLarge from "../assets/logos/DanesListLettersOnly.png";
 import "../styles/Header.css";
 

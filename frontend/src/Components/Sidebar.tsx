@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
