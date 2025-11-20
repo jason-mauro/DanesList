@@ -1,5 +1,5 @@
 // src/utils/api.ts
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:7002/api';
 
 export const signup = async (userData: {
   firstName: string;
@@ -17,6 +17,7 @@ export const signup = async (userData: {
       'Content-Type': 'application/json',
     },
     // No credentials: 'include' needed! ✅
+    credentials: 'include',
     body: JSON.stringify(userData),
   });
 
@@ -45,6 +46,7 @@ export const login = async (credentials: {
       'Content-Type': 'application/json',
     },
     // No credentials: 'include' needed! ✅
+    credentials: 'include',
     body: JSON.stringify(credentials),
   });
 
@@ -68,6 +70,7 @@ export const logout = async () => {
     // Optional: notify backend
     await fetch(`${API_BASE_URL}/auth/logout`, {
       method: 'POST',
+      credentials: 'include',
     });
   } catch (error) {
     console.error('Logout error:', error);

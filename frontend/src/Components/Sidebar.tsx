@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
@@ -119,8 +120,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         <div className="dl-avatar" />
         <div className="dl-avatar-text">
           <div className="dl-avatar-name">{getUserName()}</div>
-          <div className="dl-avatar-signout">
-            <Link to="/Login">Sign out</Link>
             <button 
               onClick={handleSignOut}
               style={{
@@ -135,7 +134,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             >
               Sign out
             </button>
-          </div>
         </div>
       </div>
     </aside>
