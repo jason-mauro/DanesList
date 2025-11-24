@@ -9,34 +9,37 @@ dotenv.config();
 
 const app = express();
 // const PORT: number = 3000;
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7002;
 
 // Cors configuration
-const corsOptions = {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    optionsSuccessStatus: 200 // For legacy browsers
-  };
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
-app.use(cors(corsOptions))
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 
 // Middleware
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log("➡️ Incoming:", req.method, req.url);
+  next();
+});
+
 // Routes
 app.use("/api/auth", router);
 
-// app.get("/", (req: Request, res: Response): void => {
-//     res.send("Server is running");
-// });
-
-app.listen(PORT, () => {
-    connectDB();
-    console.log(`Server is running at port ${PORT}`);
+// Start server
+app.listen(PORT, "0.0.0.0", () => {
+  connectDB();
+  console.log(`Server running on port ${PORT}`);
 });
-
-
-
