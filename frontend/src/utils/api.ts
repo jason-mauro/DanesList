@@ -1,5 +1,5 @@
 // src/utils/api.ts
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:7002/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const signup = async (userData: {
   firstName: string;

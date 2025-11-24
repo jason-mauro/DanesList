@@ -1,0 +1,34 @@
+.fav-main {
+  padding: 24px 32px;
+}
+
+.fav-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* GRID: 4 columns → 3 → 2 for smaller screens */
+.fav-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1200px) {
+  .fav-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .fav-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .fav-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}

@@ -33,3 +33,9 @@
   color: #6b7280;
 }
 
+.sidebar-link {
+  text-decoration: none;   /* remove underline */
+  color: inherit;          /* use the button text color instead of blue */
+  display: block;          /* make the whole button clickable */
+  width: 100%;
+}

@@ -4,6 +4,15 @@ import "../styles/ViewListing.css";
 
 export const ViewListing: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const toggleFavorite = () => {
+    setIsFavorite((prev) => !prev);
+
+    // Later you will replace this with:
+    // await api.addFavorite(listing.id)
+    console.log("Favorite toggled:", !isFavorite);
+    };
 
   // TEMP MOCK DATA
   const listing = {
@@ -22,17 +31,22 @@ export const ViewListing: React.FC = () => {
   };
 
   return (
-    <div className="dl-layout">
+    <div className="dl-layout viewlisting-bg">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       <main className="dl-main">
         <div className="vl-page">
-
+            
           {/* FORM CONTAINER */}
           <div className="vl-container">
 
-            {/* MAIN LISTING IMAGE */}
+            <div className="vl-image-wrapper">
             <img src={listing.imageUrl} alt={listing.title} className="vl-image" />
+            <button className="vl-fav-btn" onClick={toggleFavorite}>
+                {isFavorite ? "❤️" : "🤍"}
+            </button>
+            </div>
+
 
             {/* TITLE */}
             <h1 className="vl-title">{listing.title}</h1>

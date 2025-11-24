@@ -50,71 +50,86 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         {isOpen ? "☰" : "✕"}
       </button>
     
-
-      {/* Logo (hidden when collapsed) */}
-      <div className="dl-sidebar-logo">
-        <img
-          src={DanesListLogoSmall}
-          alt="DanesList Logo"
-          className="dl-logo-small"
-        />
-      </div>
+        <Link to="/DanesListHome" className="sidebar-link">
+            <div className="dl-sidebar-logo">
+                <img
+                src={DanesListLogoSmall}
+                alt="DanesList Logo"
+                className="dl-logo-small"
+                />
+            </div>
+        </Link>
 
       <nav className="dl-sidebar-nav">
-        <div className="dl-tooltip">
-          <button className="dl-nav-item">
-            <span className="dl-nav-icon">＋</span>
-            <div className="dl-nav-text">
-              <span className="dl-nav-title">Create Listing</span>
+        <Link to="/CreateListing" className="sidebar-link">
+            <div className="dl-tooltip">
+            <button className="dl-nav-item">
+                <span className="dl-nav-icon">＋</span>
+                <div className="dl-nav-text">
+                <span className="dl-nav-title">Create Listing</span>
+                </div>
+            </button>
+            <span className="dl-tooltip-text">Create Listing</span>
             </div>
-          </button>
-          <span className="dl-tooltip-text">Create Listing</span>
-        </div>
+        </Link>
 
-        <div className="dl-tooltip">
-          <button className="dl-nav-item">
-            <span className="dl-nav-icon">🗒️</span>
-            <div className="dl-nav-text">
-              <span className="dl-nav-title">Manage My Listings</span>
-            </div>
-          </button>
-          <span className="dl-tooltip-text">Manage My Listings</span>
-        </div>
 
-        <div className="dl-tooltip">
-          <button className="dl-nav-item">
-            <span className="dl-nav-icon">⭐️</span>
-            <div className="dl-nav-text">
-              <span className="dl-nav-title">Favorites</span>
-            </div>
-          </button>
-          <span className="dl-tooltip-text">Favorites</span>
-        </div>
+        {/* TODO make a page that sends you to your listings, similar to favorite listings */}
+        {/* Then when they click a listing from there, send them to manage listing for that specific listing */}
 
-        <div className="dl-tooltip">
-          <button className="dl-nav-item">
-            <span className="dl-nav-icon">✉️</span>
-            <div className="dl-nav-text dl-nav-text-row">
-              <div>
-                <span className="dl-nav-title">Messages</span>
-                <span className="dl-nav-subtitle"> 1 Unread</span>
-              </div>
-              <span className="dl-nav-dot" />
+        <Link to="/ManageMyListings" className="sidebar-link">
+            <div className="dl-tooltip">
+            <button className="dl-nav-item">
+                <span className="dl-nav-icon">🗒️</span>
+                <div className="dl-nav-text">
+                <span className="dl-nav-title">Manage My Listings</span>
+                </div>
+            </button>
+            <span className="dl-tooltip-text">Manage My Listings</span>
             </div>
-          </button>
-          <span className="dl-tooltip-text">Messages</span>
-        </div>
+        </Link>
 
-        <div className="dl-tooltip">
-          <button className="dl-nav-item">
-            <span className="dl-nav-icon">👤</span>
-            <div className="dl-nav-text">
-              <span className="dl-nav-title">Account</span>
+        <Link to="/Favorites" className="sidebar-link">
+            <div className="dl-tooltip">
+            <button className="dl-nav-item">
+                <span className="dl-nav-icon">⭐️</span>
+                <div className="dl-nav-text">
+                <span className="dl-nav-title">Favorites</span>
+                </div>
+            </button>
+            <span className="dl-tooltip-text">Favorites</span>
             </div>
-          </button>
-          <span className="dl-tooltip-text">Account</span>
-        </div>
-      </nav>
+        </Link>
+
+        <Link to="/Messages" className="sidebar-link">
+            <div className="dl-tooltip">
+            <button className="dl-nav-item">
+                <span className="dl-nav-icon">✉️</span>
+                <div className="dl-nav-text dl-nav-text-row">
+                <div>
+                    <span className="dl-nav-title">Messages</span>
+                    <span className="dl-nav-subtitle"> 1 Unread</span>
+                </div>
+                <span className="dl-nav-dot" />
+                </div>
+            </button>
+            <span className="dl-tooltip-text">Messages</span>
+            </div>
+        </Link>
+
+        <Link to="/MyAccount" className="sidebar-link">
+            <div className="dl-tooltip">
+            <button className="dl-nav-item">
+                <span className="dl-nav-icon">👤</span>
+                <div className="dl-nav-text">
+                <span className="dl-nav-title">Account</span>
+                </div>
+            </button>
+            <span className="dl-tooltip-text">Account</span>
+            </div>
+        </Link>
+        </nav>
+
 
       <div className="dl-sidebar-footer">
         <div className="dl-avatar" />

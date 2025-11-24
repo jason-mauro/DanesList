@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import "../styles/ViewListing.css"; // reuse same styling
 
-export const ManageListing: React.FC = () => {
+export const EditListing: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isSold, setIsSold] = useState(false);
 
