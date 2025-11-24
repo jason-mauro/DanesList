@@ -11,6 +11,6 @@ const ListingCategorySchema = new mongoose.Schema({
         ref: "Category",
         required: true
     },
-}, {versionKey: false });
+}, {versionKey: false , collection: "listingCategories"});
 
-export const ListingCategory = mongoose.model("ListingCategory", ListingCategorySchema)
+export const ListingCategory = mongoose.model("ListingCategories", ListingCategorySchema)
