@@ -1,9 +1,10 @@
 /* Page Title */
 .cl-title {
-  font-size: 40px;
+  font-size: 45px;
   font-weight: 700;
   margin-bottom: 20px;
   margin: 0 auto 20px;
+  padding-bottom: 25px;
 }
 
 /* Main form container */

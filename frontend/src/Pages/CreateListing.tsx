@@ -43,7 +43,6 @@ export const CreateListing: React.FC = () => {
       {/* MAIN PAGE */}
       <main className="dl-main">
         <div className="cl-page">
-        <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
         <h1 className="cl-title">Create a New Listing</h1>
 
