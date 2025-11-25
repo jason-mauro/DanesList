@@ -16,6 +16,7 @@ export const signup = async (userData: {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: "include",
     // No credentials: 'include' needed! ✅
     credentials: 'include',
     body: JSON.stringify(userData),
@@ -45,6 +46,7 @@ export const login = async (credentials: {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: "include",
     // No credentials: 'include' needed! ✅
     credentials: 'include',
     body: JSON.stringify(credentials),
@@ -102,6 +104,7 @@ export const makeAuthenticatedRequest = async (url: string, options: RequestInit
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`, // Attach token here
     },
+    credentials: "include"
   });
 
   return response;

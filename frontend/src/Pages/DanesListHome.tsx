@@ -54,7 +54,7 @@ export const DanesListHome: React.FC = () => {
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       <main className="dl-main">
-        <Header onToggleSidebar={toggleSidebar} />
+        <Header />
 
         <SearchBar 
           value={searchQuery}
