@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Sidebar } from "../Components/Sidebar";
-import { ListingCard } from "../Components/ListingCard";
+import { ListingGrid } from "../Components/ListingGrid"; 
 import "../styles/Favorites.css";
 
 // TEMP MOCK
@@ -19,18 +19,10 @@ export const Favorites: React.FC = () => {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       <main className="dl-main fav-main">
-        <h1 className="fav-title">My Favorites</h1>
-
-        <div className="fav-grid">
-          {favoriteListings.map((listing) => (
-            <ListingCard
-              key={listing.id}
-              listing={listing}
-              onClick={() => console.log("Clicked", listing.id)}
-            />
-          ))}
-        </div>
+         <h1 className="fav-title">My Favorites</h1>
+        <ListingGrid items={favoriteListings} />
       </main>
+
     </div>
   );
 };

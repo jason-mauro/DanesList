@@ -1,18 +1,15 @@
 import React from "react";
-import DanesListLettersOnly from "../assets/logos/DanesListLettersOnly.png";
+import DanesListLettersLogo from "../assets/logos/DanesListLettersOnly.png";
 import "../styles/Header.css";
 
-export const Header: React.FC<{ onToggleSidebar?: () => void }> = ({ onToggleSidebar }) => {
+export const Header = () => {
   return (
     <header className="dl-header">
-      <div className="dl-brand" onClick={onToggleSidebar}>
-        <img 
-          src={DanesListLettersOnly} 
-          className="dl-logo-img" 
-          alt="DanesList Logo" 
-        />
-      </div>
+      <img 
+        src={DanesListLettersLogo}
+        className="dl-logo-img"
+        alt="DanesList Logo"
+      />
     </header>
   );
 };
-

@@ -1,32 +1,17 @@
-/* Header with brand */
+/* Header container */
 .dl-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 20px 24px;
-  background: white;
+  padding: 16px 14px;
+  background: transparent;
   position: relative;
-  z-index: 5;
+  z-index: 10;
 }
 
-.dl-sidebar {
-  z-index: 20;
-}
-
-.dl-brand {
-  display: flex;
-  align-items: center;
-}
-
+/* Keep logo at a fixed size */
 .dl-logo-img {
-  width: 260px;
-  height: auto;
+  height: 120px;         /* perfect size for your layout */
+  width: 100%;          /* keeps natural aspect ratio */
   object-fit: contain;
+  display: block;
 }
-
-@media (max-width: 900px) {
-  .dl-logo-img {
-    width: 300px;
-  }
-}
-
