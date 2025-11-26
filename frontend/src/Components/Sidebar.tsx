@@ -19,28 +19,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       await logout();
       
       // Navigate to login page
-      navigate("/Login");
+      navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
       // Even if API call fails, still clear local data and redirect
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      navigate("/Login");
+      localStorage.removeItem('username');
+      localStorage.removeItem("userId")
+      navigate("/login");
     }
   };
 
   // Get user info from localStorage to display
   const getUserName = () => {
-    try {
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        const user = JSON.parse(userStr);
-        return user.username || "User";
-      }
-    } catch (error) {
-      console.error("Error parsing user data:", error);
+    const username = localStorage.getItem('username');
+    if (username) {
+        return username;
     }
-    return "User";
+    return "User"
   };
 
   return (
@@ -50,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         {isOpen ? "☰" : "✕"}
       </button>
     
-        <Link to="/DanesListHome" className="sidebar-link">
+        <Link to="/home" className="sidebar-link">
             <div className="dl-sidebar-logo">
                 <img
                 src={DanesListLogoSmall}
@@ -61,7 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         </Link>
 
       <nav className="dl-sidebar-nav">
-        <Link to="/CreateListing" className="sidebar-link">
+        <Link to="/createListing" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">＋</span>
@@ -77,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         {/* TODO make a page that sends you to your listings, similar to favorite listings */}
         {/* Then when they click a listing from there, send them to manage listing for that specific listing */}
 
-        <Link to="/ManageMyListings" className="sidebar-link">
+        <Link to="/listing" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">🗒️</span>
@@ -89,7 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             </div>
         </Link>
 
-        <Link to="/Favorites" className="sidebar-link">
+        <Link to="/editListing" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">⭐️</span>
@@ -101,7 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             </div>
         </Link>
 
-        <Link to="/Messages" className="sidebar-link">
+        <Link to="/messages" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">✉️</span>
@@ -117,7 +112,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             </div>
         </Link>
 
-        <Link to="/MyAccount" className="sidebar-link">
+        <Link to="/account" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">👤</span>

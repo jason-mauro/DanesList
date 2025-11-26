@@ -1,6 +1,7 @@
 // src/utils/api.ts
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+// SIGNUP
 export const signup = async (userData: {
   firstName: string;
   lastName: string;
@@ -9,16 +10,13 @@ export const signup = async (userData: {
   password: string;
   confirmPassword?: string;
 }) => {
-    console.log('Attempting signup to:', `${API_BASE_URL}/auth/signup`);
-    
+
   const response = await fetch(`${API_BASE_URL}/auth/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: "include",
-    // No credentials: 'include' needed! ✅
-    credentials: 'include',
+    credentials: 'include',     // send/receive cookies
     body: JSON.stringify(userData),
   });
 
@@ -28,27 +26,20 @@ export const signup = async (userData: {
     throw new Error(data.error || 'Signup failed');
   }
 
-  // Store token in localStorage
-  if (data.token) {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-  }
+  const dataParsed = JSON.parse(data);
+  localStorage.setItem("userId", dataParsed._id);
+  localStorage.setItem("username", dataParsed.username)
 
-  return data;
+  return data; // user info, but no token
 };
 
-export const login = async (credentials: {
-  email: string;
-  password: string;
-}) => {
+
+// LOGIN
+export const login = async (credentials: { email: string; password: string }) => {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: "include",
-    // No credentials: 'include' needed! ✅
-    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',      // IMPORTANT: cookie arrives here
     body: JSON.stringify(credentials),
   });
 
@@ -58,53 +49,44 @@ export const login = async (credentials: {
     throw new Error(data.error || 'Login failed');
   }
 
-  // Store token in localStorage
-  if (data.token) {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-  }
-
+  const dataParsed = JSON.parse(data);
+  localStorage.setItem("userId", dataParsed._id);
+  localStorage.setItem("username", dataParsed.username)
   return data;
 };
 
+
+// LOGOUT
 export const logout = async () => {
-  try {
-    // Optional: notify backend
-    await fetch(`${API_BASE_URL}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    });
-  } catch (error) {
-    console.error('Logout error:', error);
-  } finally {
-    // Clear localStorage regardless
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  }
+  await fetch(`${API_BASE_URL}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include', // ensure cookie removal
+  });
 };
 
-// Helper function to get auth token
-export const getAuthToken = () => {
-  return localStorage.getItem('token');
+
+// CHECK AUTH FROM BACKEND
+export const isAuthenticated = async () => {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    credentials: 'include',
+  });
+
+  return response.ok; // true if authenticated, false if not
 };
 
-// Helper function to check if user is logged in
-export const isAuthenticated = () => {
-  return !!localStorage.getItem('token');
-};
 
-// Example: Make authenticated requests
-export const makeAuthenticatedRequest = async (url: string, options: RequestInit = {}) => {
-  const token = getAuthToken();
-
+// FOR CALLING PROTECTED ROUTES
+export const makeAuthenticatedRequest = async (
+  url: string,
+  options: RequestInit = {}
+) => {
   const response = await fetch(url, {
     ...options,
     headers: {
-      ...options.headers,
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`, // Attach token here
+      ...(options.headers || {}),
     },
-    credentials: "include"
+    credentials: 'include', // send cookie auth
   });
 
   return response;

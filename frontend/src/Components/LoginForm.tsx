@@ -37,7 +37,7 @@ const LoginScreen = () => {
       localStorage.setItem('user', JSON.stringify(response));
       
       // Navigate to home page
-      navigate('/DanesListHome');
+      navigate('/home');
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
       console.error("Login error:", err);

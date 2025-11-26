@@ -55,7 +55,7 @@ const SignupScreen = () => {
       localStorage.setItem('user', JSON.stringify(response));
       
       // Navigate to home page
-      navigate('/DanesListHome');
+      navigate('/home');
     } catch (err: any) {
       setError(err.message || "Signup failed. Please try again.");
       console.error("Signup error:", err);
