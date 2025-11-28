@@ -13,11 +13,13 @@ export const BaseUserSchema = z.object({
         message: "Invalid roleID (must be a valid ObjectId)",
       })
       .optional(),
+      avatar: z.string().nullish()
   });
 
-export const UserInputSchema = BaseUserSchema.omit({ roleID: true }).extend({
+export const UserInputSchema = BaseUserSchema.omit({ roleID: true, avatar: true }).extend({
 roleID: BaseUserSchema.shape.roleID.optional(), // still allow if provided
 });
+
 export type UserInput = z.infer<typeof UserInputSchema>;
 
 

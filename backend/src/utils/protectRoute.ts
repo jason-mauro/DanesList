@@ -3,32 +3,28 @@ import {User} from "../models/user.model.js";
 import {Request, Response, NextFunction} from "express";
 
 const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const token = req.cookies.jwt;
+    const token = req.cookies.jwt;
 
-		if (!token) {
-			return res.status(401).json({ error: "Unauthorized - No Token Provided" });
-		}
+    if (!token) {
+        console.log("no token")
+        return res.status(401).json({message: "Not authenticated"})
+    }
+    console.log("token")
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {userId: string};
 
-		const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;;
+        const user = await User.findById(decoded.userId).select("-password");
 
-		if (!decoded) {
-			return res.status(401).json({ error: "Unauthorized - Invalid Token" });
-		}
+        if (!user) return res.status(404).json({ message: "User not found" });
+		
+        console.log("Sucessful authenticated on protect route")
 
-		const user = await User.findById(decoded.userId).select("-password");
+        req.user = user;
+        next();
+    } catch {
+        return res.status(401).json({ message: "Invalid token"})
+    }
 
-		if (!user) {
-			return res.status(404).json({ error: "User not found" });
-		}
-
-		req.user = user;
-
-		next();
-	} catch (error: any) {
-		console.log("Error in protectRoute util: ", error.message);
-		res.status(500).json({ error: "Internal server error" });
-	}
 };
 
 export default protectRoute;

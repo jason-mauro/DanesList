@@ -9,7 +9,7 @@ const ListingSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    isSold: {type: Boolean, defualt: false}
+    isSold: {type: Boolean, default: false}
 }, {timestamps: true, versionKey: false})
 
 export const Listing = mongoose.model("Listing", ListingSchema);

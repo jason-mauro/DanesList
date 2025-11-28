@@ -1,4 +1,3 @@
-import React from "react";
 import DanesListLettersLogo from "../assets/logos/DanesListLettersOnly.png";
 import "../styles/Header.css";
 

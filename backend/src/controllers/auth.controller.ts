@@ -35,7 +35,8 @@ export const signup = async (req: Request, res: Response) => {
             _id: newUser._id,
             fullName: newUser.firstName + " " + newUser.lastName,
             username: newUser.username,
-            email: newUser.email
+            email: newUser.email,
+            avatar: newUser.avatar
         })
 
     } catch (error: any){
@@ -63,7 +64,8 @@ export const login = async (req: Request, res: Response) => {
             _id: user._id,
             fullName: user.firstName + " " + user.lastName,
             username: user.username,
-            email: user.email
+            email: user.email,
+            avatar: user.avatar
         })
 
     } catch (error: any) {

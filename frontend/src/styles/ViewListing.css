@@ -20,12 +20,15 @@
 }
 
 /* Listing image */
+
 .vl-image {
   width: 100%;
-  max-height: 420px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  height: 100%;
+  max-width: 600px; /* same as wrapper */
+  max-height: 400px; /* same as wrapper */
+  object-fit: contain; /* scales image to fit while maintaining aspect ratio */
+  display: block;
+  margin: 0 auto; /* centers the image horizontally */
 }
 
 /* Title */
@@ -87,10 +90,10 @@
 }
 
 .vl-seller-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
+  border-radius: 50%; /* Optional: makes it circular */
 }
 
 .vl-seller-name {
@@ -154,6 +157,13 @@
 .vl-image-wrapper {
   position: relative;
   width: 100%;
+  max-width: 600px; /* adjust this to your desired max width */
+  max-height: 400px; /* adjust this to your desired max height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* centers the wrapper horizontally */
+  overflow: hidden;
 }
 
 /* SOLD banner */

@@ -26,6 +26,116 @@
   gap: 6px;
 }
 
+.cl-multiselect {
+  position: relative;
+  width: 100%;
+}
+
+.cl-multiselect-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.cl-multiselect-input:hover {
+  border-color: #999;
+}
+
+.cl-selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+}
+
+.cl-placeholder {
+  color: #999;
+}
+
+.cl-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #e0e7ff;
+  color: #3730a3;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.cl-tag-remove {
+  background: none;
+  border: none;
+  color: #3730a3;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cl-tag-remove:hover {
+  color: #1e1b4b;
+}
+
+.cl-dropdown-arrow {
+  color: #666;
+  font-size: 12px;
+}
+
+.cl-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.cl-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  justify-content: flex-start;
+}
+
+.cl-dropdown-item:hover {
+  background: #f3f4f6;
+}
+
+.cl-dropdown-item input[type="checkbox"] {
+  cursor: pointer;
+  margin: 0;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.cl-dropdown-item span {
+  flex: 1;
+  text-align: left;
+}
+
 .cl-field label {
   font-size: 14px;
   font-weight: 600;

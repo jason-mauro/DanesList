@@ -42,7 +42,7 @@ function App() {
             />
 
             <Route
-              path="/listing"
+              path="/listing/:id"
               element={
                 <ProtectedRoute>
                   <ViewListing />

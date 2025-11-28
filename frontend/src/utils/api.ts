@@ -26,9 +26,9 @@ export const signup = async (userData: {
     throw new Error(data.error || 'Signup failed');
   }
 
-  const dataParsed = JSON.parse(data);
-  localStorage.setItem("userId", dataParsed._id);
-  localStorage.setItem("username", dataParsed.username)
+  localStorage.setItem("userId", data._id);
+  localStorage.setItem("username", data.username)
+  localStorage.setItem("user_avatar", data.avatar);
 
   return data; // user info, but no token
 };
@@ -49,9 +49,9 @@ export const login = async (credentials: { email: string; password: string }) =>
     throw new Error(data.error || 'Login failed');
   }
 
-  const dataParsed = JSON.parse(data);
-  localStorage.setItem("userId", dataParsed._id);
-  localStorage.setItem("username", dataParsed.username)
+  localStorage.setItem("userId", data._id);
+  localStorage.setItem("username", data.username)
+  localStorage.setItem("user_avatar", data.avatar);
   return data;
 };
 

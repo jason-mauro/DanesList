@@ -1,93 +1,111 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import "../styles/ViewListing.css";
+import { useParams } from "react-router-dom";
+
+import defaultAvatar from "../assets/default-avatar.jpg"
+import axios from "axios";
+import type { ListingData } from "../types/listing.types";
+import LoadingSpinner from "../Components/LoadingSpinner";
 
 export const ViewListing: React.FC = () => {
+  const {id} = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ListingData>();
+  const [error, setError] = useState(null);
 
-    const toggleFavorite = () => {
+  // This is not done
+  const toggleFavorite = () => {
     setIsFavorite((prev) => !prev);
 
     // Later you will replace this with:
     // await api.addFavorite(listing.id)
     console.log("Favorite toggled:", !isFavorite);
-    };
-
-  // TEMP MOCK DATA
-  const listing = {
-    title: "Fujifilm Camera",
-    price: 0,
-    imageUrl:
-      "https://images.pexels.com/photos/1203803/pexels-photo-1203803.jpeg",
-    description:
-      "Camera I had lying around. Please contact to negotiate price. I know what I have",
-    tags: ["Camera"],
-    isSold: false,
-    seller: {
-      name: "Seller Name",
-      avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-    },
   };
+
+  useEffect(() => {
+    if (!id)
+      return;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/${id}`, {
+          withCredentials: true
+        });
+
+        const data = res.data;
+        
+        setData(data);
+      }
+      catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
 
   return (
     <div className="dl-layout viewlisting-bg">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
+      {loading ? <LoadingSpinner size="small"/> : error ? <p>Error: {error} </p> : !data ? <p>No listing found.</p> :
       <main className="dl-main">
-        <div className="vl-page">
-            
-          {/* FORM CONTAINER */}
-          <div className="vl-container">
+      <div className="vl-page">
+        
+        {/* FORM CONTAINER */}
+        <div className="vl-container">
 
-            <div className="vl-image-wrapper">
-            <img src={listing.imageUrl} alt={listing.title} className="vl-image" />
-            <button className="vl-fav-btn" onClick={toggleFavorite}>
-                {isFavorite ? "❤️" : "🤍"}
-            </button>
-            </div>
+          <div className="vl-image-wrapper">
+          <img src={data.images[0]} alt={data.title} className="vl-image" />
+          </div>
 
 
-            {/* TITLE */}
-            <h1 className="vl-title">{listing.title}</h1>
+          {/* TITLE */}
+          <h1 className="vl-title">{data.title}</h1>
 
-            {/* TAGS */}
-            <div className="vl-tags">
-              {listing.tags.map((tag, i) => (
-                <span key={i} className="vl-tag">
-                  {tag}
-                </span>
-              ))}
-            </div>
+          {/* TAGS */}
+          <div className="vl-tags">
+            {data.categories.map((tag, i) => (
+              <span key={i} className="vl-tag">
+                {tag}
+              </span>
+            ))}
+          </div>
 
-            {/* PRICE */}
-            <div className="vl-price">${listing.price}</div>
+          {/* PRICE */}
+          <div className="vl-price">${data.price}</div>
 
-            <p className="vl-status-label">Listing Status</p>
+          <p className="vl-status-label">Listing Status : {data.isSold ? "sold": "available"}</p>
 
-            {/* DESCRIPTION */}
-            <div className="vl-section">
-              <h2>Description</h2>
-              <p>{listing.description}</p>
-            </div>
+          {/* DESCRIPTION */}
+          <div className="vl-section">
+            <h2>Description</h2>
+            <p>{data.description}</p>
+          </div>
 
-            {/* SELLER INFO */}
-            <div className="vl-section">
-              <h2>Seller Information</h2>
+          {/* SELLER INFO */}
+          <div className="vl-section">
+            <h2>Seller Information</h2>
 
-              <div className="vl-seller-row">
-                <img className="vl-seller-avatar" src={listing.seller.avatar} />
-                <div>
-                  <div className="vl-seller-name">{listing.seller.name}</div>
-                </div>
+            <div className="vl-seller-row">
+              <img className="vl-seller-avatar" src={data.user.avatar || defaultAvatar} />
+              <div>
+                <div className="vl-seller-name">{data.user.username}</div>
               </div>
             </div>
-
-            {/* BUTTON */}
-            <button className="vl-message-btn">Message Seller</button>
           </div>
+
+          {/* BUTTON */}
+          <button className="vl-message-btn">Message Seller</button>
         </div>
-      </main>
+      </div>
+    </main>}
+      
     </div>
   );
 };

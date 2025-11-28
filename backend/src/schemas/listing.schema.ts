@@ -8,7 +8,7 @@ export const ListingInputSchema = z.object({
   userID: z
     .string()
     .refine((val) => Types.ObjectId.isValid(val), { message: "Invalid userID" }),
-  isSold: z.boolean().optional().default(false),
+  isSold: z.boolean().optional().default(false)
 });
 
 export type ListingInput = z.infer<typeof ListingInputSchema>;

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
+import DefaultAvatar from "../assets/default-avatar.jpg"
 
 type SidebarProps = {
   isOpen: boolean;
@@ -37,6 +38,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     }
     return "User"
   };
+
+  const getUserAvatar = () => {
+    const avatar = localStorage.getItem('user_avatar');
+    if (!avatar) {
+      return "none"
+    }
+    return avatar;
+  }
 
   return (
     <aside className={`dl-sidebar ${isOpen ? "open" : "closed"}`}>
@@ -126,26 +135,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         </nav>
 
 
-      <div className="dl-sidebar-footer">
-        <div className="dl-avatar" />
-        <div className="dl-avatar-text">
-          <div className="dl-avatar-name">{getUserName()}</div>
+      
+        <div className="dl-sidebar-footer">
+          <img className="dl-avatar" src={getUserAvatar()} alt={getUserName()} />
+          <div className="dl-avatar-text">
+            <div className="dl-avatar-name">{getUserName()}</div>
             <button 
               onClick={handleSignOut}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'inherit',
-                cursor: 'pointer',
-                padding: 0,
-                font: 'inherit',
-                textDecoration: 'underline'
-              }}
+              className="dl-sign-out-btn"
             >
               Sign out
             </button>
+          </div>
         </div>
-      </div>
     </aside>
   );
 };
