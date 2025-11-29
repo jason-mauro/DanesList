@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 export const ListingInputSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  price: z.number().positive("Price must be positive"),
+  price: z.number().min(0, "Price must be 0 or more"),
   userID: z
     .string()
     .refine((val) => Types.ObjectId.isValid(val), { message: "Invalid userID" }),
