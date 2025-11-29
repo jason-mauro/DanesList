@@ -12,42 +12,116 @@ export const ViewListing: React.FC = () => {
   const {id} = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ListingData>();
   const [error, setError] = useState(null);
 
-  // This is not done
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
+    const handleFavoriteClick = () => {
+    // If trying to un-favorite → ask for confirmation
+    if (isFavorite) {
+        setShowConfirm(true);
+    } else {
+        addFavorite();
+    }
+    };
 
-    // Later you will replace this with:
-    // await api.addFavorite(listing.id)
-    console.log("Favorite toggled:", !isFavorite);
-  };
+    // TEMP frontend-only favorite add
+    const addFavorite = () => {
+    console.log("Pretend: sending POST /favorites/add");
+    setIsFavorite(true);      // <-- immediately toggle
+    };
+
+    // TEMP frontend-only favorite remove
+    const removeFavorite = () => {
+    console.log("Pretend: sending DELETE /favorites/remove");
+    setIsFavorite(false);     // <-- immediately toggle
+    setShowConfirm(false);
+    };
+    
+    //Backend logic maybe?
+    /*const addFavorite = async () => {
+    try {
+        // Replace with your backend endpoint
+        await axios.post(
+        `${import.meta.env.VITE_API_URL}/favorites/add/${id}`,
+        {},
+        { withCredentials: true }
+        );
+
+        setIsFavorite(true);
+    } catch (err) {
+        console.error("Failed to favorite:", err);
+    }
+    };
+
+    const removeFavorite = async () => {
+    try {
+        // Replace with your backend endpoint
+        await axios.delete(
+        `${import.meta.env.VITE_API_URL}/favorites/remove/${id}`,
+        { withCredentials: true }
+        );
+
+        setIsFavorite(false);
+        setShowConfirm(false);
+    } catch (err) {
+        console.error("Failed to remove favorite:", err);
+    }
+    };
 
   useEffect(() => {
-    if (!id)
-      return;
+  if (!id) return;
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/${id}`, {
-          withCredentials: true
-        });
+  const fetchData = async () => {
+    try {
+      setLoading(true);
 
-        const data = res.data;
-        
-        setData(data);
-      }
-      catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [id]);
+      // 1) Load listing details
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/listings/${id}`,
+        { withCredentials: true }
+      );
+      setData(res.data);
+
+      // 2) Load favorite status
+      const favRes = await axios.get(
+        `${import.meta.env.VITE_API_URL}/favorites/check/${id}`,
+        { withCredentials: true }
+      );
+      setIsFavorite(favRes.data.isFavorite);
+    }
+    catch (error: any) {
+      setError(error.message);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [id]);*/
+
+    useEffect(() => {
+  if (!id) return;
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/${id}`, {
+        withCredentials: true
+      });
+      setData(res.data);
+
+      // TEMP: default to "not favorited"
+      setIsFavorite(false);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, [id]);
 
 
   return (
@@ -62,6 +136,10 @@ export const ViewListing: React.FC = () => {
 
           <div className="vl-image-wrapper">
           <img src={data.images[0]} alt={data.title} className="vl-image" />
+            {/* FAVORITE BUTTON */}
+            <button className="vl-fav-btn" onClick={handleFavoriteClick}>
+            <span>{isFavorite ? "❤️" : "🤍"}</span>
+            </button>
           </div>
 
 
@@ -104,6 +182,17 @@ export const ViewListing: React.FC = () => {
           <button className="vl-message-btn">Message Seller</button>
         </div>
       </div>
+      {showConfirm && (
+        <div className="vl-confirm-overlay">
+            <div className="vl-confirm-box">
+            <p>Remove this listing from favorites?</p>
+            <div className="vl-confirm-buttons">
+                <button className="confirm-yes" onClick={removeFavorite}>Yes</button>
+                <button className="confirm-no" onClick={() => setShowConfirm(false)}>Cancel</button>
+            </div>
+            </div>
+        </div>
+        )}
     </main>}
       
     </div>

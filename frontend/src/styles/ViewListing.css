@@ -213,6 +213,20 @@
   padding-left: 2px;
 }
 
+/* When favorited */
+.vl-fav-btn.favorited {
+  background: #dc2626 !important; /* red bubble */
+  color: white !important;
+  border-color: #dc2626 !important;
+}
+
+/* When NOT favorited */
+.vl-fav-btn.not-favorited {
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
+  border-color: white;
+}
+
 .vl-fav-btn:hover {
   transform: scale(1.1);
   background: white;
@@ -223,4 +237,51 @@
   transform: translateY(-2px); /* adjust until it looks visually centered */
 }
 
+/* Darkened fullscreen overlay */
+.vl-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(2px);
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 99999; /* above everything */
+}
+
+/* Pop-up box */
+.vl-confirm-box {
+  background: white;
+  padding: 24px 28px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.vl-confirm-buttons button {
+  flex: 1;
+}
+
+.confirm-yes {
+  background: #dc2626;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.confirm-no {
+  background: #9ca3af;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
