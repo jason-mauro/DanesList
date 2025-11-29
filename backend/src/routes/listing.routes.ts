@@ -12,7 +12,7 @@ listingRouter.post("/add-category", protectRoute, addCategory)
 
 listingRouter.get("/:id", protectRoute, getListing);
 
-listingRouter.get("/", protectRoute, getListings);
+listingRouter.get("", protectRoute, getListings);
 
 
 export default listingRouter;

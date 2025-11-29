@@ -13,21 +13,20 @@ const sortAttributeMap: Record<string, Record<string, 1 | -1>> = {
     minPrice: { price: 1 }
   };
 
-// GET /listings/limit=20&page=1&category="newest"
+// GET /listings/sortBy="newest"&category="Electronics&name="whatever"
 export const getListings = async (req: Request, res: Response) => {
     try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 20;
       const sortBy = (req.query.sortBy as string | undefined) ?? "newest";
       const categoryName = (req.query.category as string | undefined) ?? null;
+      const nameSearch = (req.query.name as string | undefined) ?? null;
 
     // if a category filter is provided, fetch its _id first
     let categoryID: mongoose.Types.ObjectId | null = null;
     if (categoryName) {
       const category = await Category.findOne({ name: categoryName }).select("_id");
       if (!category) {
-        // if category name invalid, return empty list (or whatever UX you prefer)
-        return res.status(200).json({ listings: [], total: 0, page, limit });
+        // if category name invalid, return empty list
+        return res.status(200).json({ listings: []});
       }
       categoryID = category._id as mongoose.Types.ObjectId;
     }
@@ -43,6 +42,14 @@ export const getListings = async (req: Request, res: Response) => {
         }
       }
     ];
+
+    if (nameSearch){
+      pipeline.push({
+        $match: {
+          title: { $regex: nameSearch, $options: "i"}
+        }
+      })
+    }
 
     // add match by category if provided
     if (categoryID) {
@@ -90,12 +97,10 @@ export const getListings = async (req: Request, res: Response) => {
     });
 
     pipeline.push({ $sort: sortAttributeMap[sortBy] });
-    pipeline.push({ $skip: (page - 1) * limit });
-    pipeline.push({ $limit: limit });
 
     const listings = await Listing.aggregate(pipeline);
 
-    return res.status(200).json({ listings, page})
+    return res.status(200).json({ listings })
 
     } catch (err: any) {
       res.status(500).json({ error : err.message });
@@ -180,12 +185,10 @@ export const createListing = async (req: Request, res: Response) => {
     // A listing request should come in req.body with form of 
     // Listing, categories [string], images [string]
     const { categories, images, ...listingData} = req.body;
-
+    console.log(categories)
     // We don't send the userID from the form data, but we get it from protected route
     listingData.userID = String(req.user?._id);
-    console.log("parsing")
     const listingInput = ListingInputSchema.parse(listingData);
-    console.log("parsed success")
 
     const listing = new Listing(listingInput);
 
@@ -203,7 +206,7 @@ export const createListing = async (req: Request, res: Response) => {
 
     // Create category listing documents
     await Promise.all(
-      images.map(async (categoryName: string) => {
+      categories.map(async (categoryName: string) => {
         if (categoryName.trim().length == 0){
           return;
         }

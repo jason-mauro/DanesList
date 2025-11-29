@@ -1,16 +1,11 @@
 import React from "react";
 import "../styles/ListingCard.css";
+import type { ListingData } from "../types/listing.types";
 
-type Listing = {
-  id: number;
-  title: string;
-  price: number;
-  imageUrl: string;
-};
 
 type ListingCardProps = {
-  listing: Listing;
-  onClick?: () => void; // optional because some pages may not use it
+  listing: ListingData;
+  onClick: () => void;
 };
 
 export const ListingCard: React.FC<ListingCardProps> = ({ listing, onClick }) => {
@@ -19,8 +14,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({ listing, onClick }) =>
       <div className="dl-card-image-wrapper">
         <img
           className="dl-card-image"
-          src={listing.imageUrl}
-          onError={(e) => (e.currentTarget.src = "/placeholder.png")}
+          src={listing.images[0]}
           alt={listing.title}
         />
       </div>

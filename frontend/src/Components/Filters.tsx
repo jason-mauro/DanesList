@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "../styles/Filters.css";
 
 type Option = {
@@ -7,7 +7,7 @@ type Option = {
 };
 
 type FiltersProps = {
-  categories?: Option[];               // optional array of categories
+  categories?: string[];               // optional array of categories
   selectedCategory: string;            // currently selected category
   onCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 
@@ -26,7 +26,10 @@ export const Filters: React.FC<FiltersProps> = ({
 }) => {
   const defaultCategories: Option[] =
     categories.length > 0
-      ? categories
+      ? [
+        { value: "", label: "Select Category" },
+        ...categories.map(c => ({ value: c, label: c }))
+      ]
       : [
           { value: "", label: "Select Category" },
           { value: "electronics", label: "Electronics" },
@@ -40,8 +43,8 @@ export const Filters: React.FC<FiltersProps> = ({
       : [
           { value: "newest", label: "Newest First" },
           { value: "oldest", label: "Oldest First" },
-          { value: "price-low", label: "Lowest Price" },
-          { value: "price-high", label: "Highest Price" },
+          { value: "minPrice", label: "Lowest Price" },
+          { value: "maxPrice", label: "Highest Price" },
         ];
 
   return (
