@@ -3,10 +3,15 @@ import { Sidebar } from "../Components/Sidebar";
 import { ConversationList } from "../Components/ConversationList";
 import { ConversationThread } from "../Components/ConversationThread";
 import "../styles/Messages.css";
+import { useLocation } from "react-router-dom";
+import { useConversation } from "../context/ConversationContext";
 
-export const Messages: React.FC = () => {
+export const NewMessage: React.FC = () => {
+  const location = useLocation();
+  const recepient = location.state?.user;
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedConversation, setSelectedConversation] = useState<any>(null);
+  const {setSelectedConversation} = useConversation();
 
   return (
     <div className="dl-layout">
@@ -20,12 +25,11 @@ export const Messages: React.FC = () => {
 
           {/* LEFT COLUMN — LIST */}
           <ConversationList
-            selected={selectedConversation}
             onSelect={setSelectedConversation}
           />
 
           {/* RIGHT COLUMN — THREAD */}
-          <ConversationThread  />
+          <ConversationThread newMessageTo={recepient} />
 
         </div>
       </main>

@@ -56,19 +56,6 @@ export const CreateListing: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleCategoryToggle = (categoryValue: string) => {
-    setSelectedCategories((prev) => {
-      if (prev.includes(categoryValue)) {
-        return prev.filter((c) => c !== categoryValue);
-      } else {
-        return [...prev, categoryValue];
-      }
-    });
-  };
-
-  const handleRemoveCategory = (categoryValue: string) => {
-    setSelectedCategories((prev) => prev.filter((c) => c !== categoryValue));
-  };
 
   const handleAddFiles = (newFiles: File[]) => {
     setFiles((prev) => [...prev, ...newFiles]);

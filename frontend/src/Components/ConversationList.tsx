@@ -1,42 +1,71 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import type { ConversationData } from "../types/messages.types";
+import { useConversation } from "../context/ConversationContext";
+import axios from "axios";
 
 type ConversationListProps = {
-  selected: any;
+  selected?: ConversationData;
   onSelect: (c: any) => void;
 };
 
-const mockConversations = [
-  { id: 1, name: "Linda", preview: "Yes the item is still ...", time: "10 min" },
-  { id: 2, name: "User2", preview: "Supporting line text lorem…", time: "1 day ago" },
-  { id: 3, name: "User3", preview: "Supporting line text lorem…", time: "1 day ago" },
-];
+export const ConversationList: React.FC<ConversationListProps> = () => {
+  const {selectedConversation, setSelectedConversation} = useConversation();
+  const [conversations, setConverstaions] = useState<ConversationData[]>([]);
 
-export const ConversationList: React.FC<ConversationListProps> = ({
-  selected,
-  onSelect,
-}) => {
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages/conversations`, {withCredentials: true});
+          const data = response.data;
+          console.log(data);
+          setConverstaions(data);
+      } catch (error: any){
+        console.log(error.message);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const formatTime = (timestamp: string) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+    if (diffInHours < 24) {
+      // Show time if today
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffInHours < 48) {
+      // Show "Yesterday" if yesterday
+      return "Yesterday";
+    } else {
+      // Show date if older
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+  };
+
   return (
     <div className="messages-list">
       <h2 className="messages-title">Conversations</h2>
 
-      {mockConversations.map((c) => (
+      {conversations?.map((c) => (
         <div
-            key={c.id}
-            className={`messages-item ${selected && selected.id === c.id ? "active" : ""}`}
-            onClick={() => onSelect(c)}
+            key={c.conversationId}
+            className={`messages-item ${selectedConversation && selectedConversation.conversationId=== c.conversationId ? "active" : ""}`}
+            onClick={() => setSelectedConversation(c)}
             >
-            <div className="messages-avatar" />
-
+            <img className="messages-avatar" src={c.otherUser.avatar} />
             <div className="messages-info">
-                <div className="messages-name">{c.name}</div>
+                <div className="messages-name">{c.otherUser.username}</div>
 
                 {/* preview as bubble */}
                 <div className="messages-preview-bubble">
-                {c.preview}
+                {c.lastMessage}
                 </div>
             </div>
 
-            <div className="messages-time">{c.time}</div>
+            <div className="messages-time">{formatTime(c.updatedAt)}</div>
         </div>
       ))}
     </div>

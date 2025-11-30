@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import "../styles/ViewListing.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import defaultAvatar from "../assets/default-avatar.jpg"
 import axios from "axios";
 import type { ListingData } from "../types/listing.types";
 import LoadingSpinner from "../Components/LoadingSpinner";
+import { useConversation } from "../context/ConversationContext";
 
 export const ViewListing: React.FC = () => {
   const {id} = useParams();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ListingData>();
   const [error, setError] = useState(null);
+  const {setSelectedConversation} = useConversation();
 
     const handleFavoriteClick = () => {
     // If trying to un-favorite → ask for confirmation
@@ -56,6 +59,22 @@ export const ViewListing: React.FC = () => {
           console.error("Failed to remove favorite:", err);
       }
     };
+
+    const messageSeller = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages/conversations/check/${data?.user._id}`, {withCredentials: true});
+        const conversationData = response.data;
+        if (response.data.exists){
+          setSelectedConversation(conversationData.conversation);
+          navigate("/messages");
+        } else {
+          setSelectedConversation(null);
+          navigate(`/messages/newMessage`, {state: {user: data?.user}})
+        }
+      } catch (error: any){
+        console.log(error);
+      }
+    }
 
 
     useEffect(() => {
@@ -138,7 +157,7 @@ export const ViewListing: React.FC = () => {
           </div>
 
           {/* BUTTON */}
-          <button className="vl-message-btn">Message Seller</button>
+          <button className="vl-message-btn" onClick={messageSeller}>Message Seller</button>
         </div>
       </div>
       {showConfirm && (

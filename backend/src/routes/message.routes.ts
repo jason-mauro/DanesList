@@ -1,13 +1,20 @@
 import express from "express";
-import { getConversationMessages, getUserConversations, sendMessage } from "../controllers/message.controller.js";
+import { getConversationMessages, getUserConversations, sendMessage, sendMessageToUser, checkConversationExists } from "../controllers/message.controller.js";
 import protectRoute from "../utils/protectRoute.js";
 
-const router = express.Router();
+const messageRouter = express.Router();
 
-router.get("/conversations", protectRoute, getUserConversations);
 
-router.post("/:id/messages", protectRoute, getConversationMessages);
+messageRouter.get("/conversations", protectRoute, getUserConversations);
 
-router.post("/conversations/:id/messages", protectRoute, sendMessage);
 
-export default router;
+messageRouter.get("/conversations/check/:otherUserId", protectRoute, checkConversationExists);
+
+messageRouter.post("/conversations/:id/messages", protectRoute, sendMessage);
+
+messageRouter.get("/:id/messages", protectRoute, getConversationMessages);
+
+messageRouter.post("/", protectRoute, sendMessageToUser);
+
+
+export default messageRouter;

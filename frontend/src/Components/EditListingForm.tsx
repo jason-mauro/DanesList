@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UploadImages } from "../Components/UploadImages";
 import { ToastPortal } from "../Components/ToastPortal";
-import type { ListingData, ListingInput } from "../types/listing.types";
+import type { ListingData } from "../types/listing.types";
 import axios from "axios";
 import "../styles/CreateListing.css";
 

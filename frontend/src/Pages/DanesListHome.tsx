@@ -5,7 +5,6 @@ import { SearchBar } from "../Components/SearchBar";
 import { Filters } from "../Components/Filters";
 import { ListingCard } from "../Components/ListingCard";
 import { Pagination } from "../Components/Pagination";
-import { sampleListings } from "../data/sampleListings";
 import "../styles/DanesListHome.css";
 import type {ListingData} from "../types/listing.types";
 import { useNavigate } from "react-router-dom";
@@ -104,11 +103,6 @@ export const DanesListHome: React.FC = () => {
       fetchData();
       
   }, [searchQuery, selectedCategory, selectedSort])
-
-  // Pagination calculations
-  const start = (currentPage - 1) * LISTINGS_PER_PAGE;
-  const end = start + LISTINGS_PER_PAGE;
-
 
   return (
     <div className="dl-layout">
