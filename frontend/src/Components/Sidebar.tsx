@@ -113,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                 <div className="dl-nav-text dl-nav-text-row">
                 <div>
                     <span className="dl-nav-title">Messages</span>
-                    <span className="unread-badge">{unreadCount > 0 ? unreadCount : ""}</span>
+                    {unreadCount > 0 && <span className="unread-badge">{ unreadCount }</span>}
                 </div>
                 <span className="dl-nav-dot" />
                 </div>
