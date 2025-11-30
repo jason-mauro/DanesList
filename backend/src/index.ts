@@ -3,6 +3,7 @@ import cors from "cors";
 import authRouter from "./routes/auth.routes.js"; 
 import listingRouter from "./routes/listing.routes.js"
 import messageRouter from "./routes/message.routes.js";
+import userRouter from "./routes/user.routes.js";
 import dotenv from "dotenv";
 import connectDB from "./db/connectToMongo.js";
 import cookieParser from "cookie-parser";
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/listings", listingRouter )
 app.use("/api/messages", messageRouter);
+app.use("/api/user", userRouter);
 
 // Start server
 server.listen(PORT, "0.0.0.0", () => {

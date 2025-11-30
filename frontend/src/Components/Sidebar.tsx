@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
+import defaultAvatar from "../assets/default-avatar.jpg";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -11,6 +12,23 @@ type SidebarProps = {
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
+  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+  const update = () => {
+    const latest = JSON.parse(localStorage.getItem("user") || "{}");
+    setCurrentUser(latest);
+    forceUpdate(); // Optional: may not be needed if setCurrentUser triggers re-render
+  };
+
+  window.addEventListener("storage", update);
+  window.addEventListener("sidebarUpdate", update);
+
+  return () => {
+    window.removeEventListener("storage", update);
+    window.removeEventListener("sidebarUpdate", update);
+  };
+}, []);
+
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -30,21 +48,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   };
 
   // Get user info from localStorage to display
-  const getUserName = () => {
-    const username = localStorage.getItem('username');
-    if (username) {
-        return username;
-    }
-    return "User"
-  };
-
-  const getUserAvatar = () => {
-    const avatar = localStorage.getItem('user_avatar');
-    if (!avatar) {
-      return "none"
-    }
-    return avatar;
-  }
+  const [currentUser, setCurrentUser] = React.useState(() => {
+  return JSON.parse(localStorage.getItem("user") || "{}");
+});
 
   return (
     <aside className={`dl-sidebar ${isOpen ? "open" : "closed"}`}>
@@ -136,9 +142,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
       
         <div className="dl-sidebar-footer">
-          <img className="dl-avatar" src={getUserAvatar()} alt={getUserName()} />
-          <div className="dl-avatar-text">
-            <div className="dl-avatar-name">{getUserName()}</div>
+          <img className="dl-avatar" src={currentUser.avatar || defaultAvatar} alt={currentUser.username || "User"} />
+            <div className="dl-avatar-name">{currentUser.username || "User"}</div>
             <button 
               onClick={handleSignOut}
               className="dl-sign-out-btn"
@@ -146,7 +151,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
               Sign out
             </button>
           </div>
-        </div>
     </aside>
   );
 };

@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import "../styles/Account.css";
 import defaultAvatar from "../assets/default-avatar.jpg";
 import { ToastPortal } from "../Components/ToastPortal";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 export const MyAccount: React.FC = () => {
+  const location = useLocation();
+  useEffect(() => {
+    const latest = JSON.parse(localStorage.getItem("user") || "{}");
+    setPreviewUrl(latest.avatar || defaultAvatar);
+  }, [location.pathname]);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -13,7 +21,10 @@ export const MyAccount: React.FC = () => {
   const [email, setEmail] = useState(storedUser.email || "");
   const [password, setPassword] = useState("");
   const [profilePic, setProfilePic] = useState<File | null>(null);
-  // Fallback image if no profilePic exists
+  const [showPassword, setShowPassword] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
+  const handleHidePassword = () => setHidePassword(!hidePassword);
+  
   const defaultPic = storedUser.profilePic?.length > 0 
     ? storedUser.profilePic 
     : defaultAvatar
@@ -30,11 +41,24 @@ export const MyAccount: React.FC = () => {
 
   const handleSubmit = async () => {
   try {
-    const updateData = {
-      username,
-      email,
-      profilePicture: previewUrl // this could be a URL or Base64 string
-    };
+    const updateData: any = {};
+
+    // Add only changed fields
+    if (username && username !== storedUser.username) updateData.username = username;
+    if (email && email !== storedUser.email) updateData.email = email;
+    if (password && password.trim() !== "") updateData.password = password;
+
+    if (profilePic) {
+      const toBase64 = (file: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+      updateData.avatar = await toBase64(profilePic);
+    }
 
     await axios.put(
       `${import.meta.env.VITE_API_URL}/user/update`,
@@ -42,7 +66,17 @@ export const MyAccount: React.FC = () => {
       { withCredentials: true }
     );
 
+    // Optionally update localStorage
+    const updatedUser = {
+      ...storedUser,
+      ...updateData,
+    };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    window.dispatchEvent(new Event("storage")); // Notify other tabs
+    window.dispatchEvent(new Event("sidebarUpdate")); // Notify sidebar to refresh
+
     setToast({ message: "Profile updated successfully!", type: "success" });
+    setPassword(""); // Clear password field after successful update
 
   } catch (error) {
     console.error(error);
@@ -61,7 +95,10 @@ export const MyAccount: React.FC = () => {
         <div className="account-card">
           <div className="account-header">
             <img className="account-avatar" src={previewUrl} alt="Profile" />
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <label className="upload-btn">
+              Upload New Photo
+              <input type="file" accept="image/*" onChange={handleImageChange} hidden />
+            </label>
           </div>
 
           <div className="account-field">
@@ -74,14 +111,26 @@ export const MyAccount: React.FC = () => {
             <input value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
 
-          <div className="account-field">
-            <label>New Password</label>
-            <input
-              type="password"
-              value={password}
-              placeholder="Leave blank to keep current"
-              onChange={(e) => setPassword(e.target.value)}
-            />
+         <div className="account-field position-relative">
+            <label htmlFor="NewPasswordInput">New Password</label>
+            <div className="position-relative">
+              <input
+                type={hidePassword ? "password" : "text"}
+                id="NewPasswordInput"
+                className="form-control pe-5"
+                placeholder="Leave blank to keep current"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-3 border-0 bg-transparent"
+                onClick={handleHidePassword}
+                style={{ zIndex: 2 }}
+              >
+                {hidePassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           <div className="account-buttons">

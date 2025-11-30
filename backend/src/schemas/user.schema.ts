@@ -62,5 +62,18 @@ export const SignupSchema = z
   // Ensures final transformed data matches the validated UserInput schema
   .pipe(UserInputSchema);
 
-
+// For PUT /user/update
+export const UserUpdateSchema = z
+  .object({
+    firstName: z.string().min(1).optional(),
+    lastName: z.string().min(1).optional(),
+    username: z.string().min(3).optional(),
+    email: z.string().email().optional(),
+    password: z.string().min(6).optional(),
+    avatar: z.string().optional(), // can be base64 or URL
+  })
+  .refine((data) => data.password === undefined || data.password.length >= 6, {
+    message: "Password must be at least 6 characters",
+    path: ["password"],
+  });
   
