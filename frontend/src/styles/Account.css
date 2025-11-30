@@ -1,5 +1,9 @@
 .account-main {
   padding: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
 }
 
 .account-title {
@@ -46,4 +50,21 @@
 
 .account-btn:hover {
   background: black;
+}
+
+.account-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.account-field label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.account-field input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
