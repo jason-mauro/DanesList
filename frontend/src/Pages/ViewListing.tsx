@@ -26,28 +26,15 @@ export const ViewListing: React.FC = () => {
     }
     };
 
-    // TEMP frontend-only favorite add
-    const addFavorite = () => {
-    console.log("Pretend: sending POST /favorites/add");
-    setIsFavorite(true);      // <-- immediately toggle
-    };
-
-    // TEMP frontend-only favorite remove
-    const removeFavorite = () => {
-    console.log("Pretend: sending DELETE /favorites/remove");
-    setIsFavorite(false);     // <-- immediately toggle
-    setShowConfirm(false);
-    };
     
     //Backend logic maybe?
-    /*const addFavorite = async () => {
+    const addFavorite = async () => {
     try {
         // Replace with your backend endpoint
         await axios.post(
-        `${import.meta.env.VITE_API_URL}/favorites/add/${id}`,
-        {},
-        { withCredentials: true }
-        );
+          `${import.meta.env.VITE_API_URL}/listings/favorite/${id}`, {},
+          { withCredentials: true }
+          );
 
         setIsFavorite(true);
     } catch (err) {
@@ -56,72 +43,44 @@ export const ViewListing: React.FC = () => {
     };
 
     const removeFavorite = async () => {
-    try {
-        // Replace with your backend endpoint
-        await axios.delete(
-        `${import.meta.env.VITE_API_URL}/favorites/remove/${id}`,
-        { withCredentials: true }
-        );
+      try {
+          // Replace with your backend endpoint
+          await axios.post(
+          `${import.meta.env.VITE_API_URL}/listings/favorite/${id}`, {} ,
+          { withCredentials: true }
+          );
 
-        setIsFavorite(false);
-        setShowConfirm(false);
-    } catch (err) {
-        console.error("Failed to remove favorite:", err);
-    }
+          setIsFavorite(false);
+          setShowConfirm(false);
+      } catch (err) {
+          console.error("Failed to remove favorite:", err);
+      }
     };
 
-  useEffect(() => {
-  if (!id) return;
-
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-
-      // 1) Load listing details
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/listings/${id}`,
-        { withCredentials: true }
-      );
-      setData(res.data);
-
-      // 2) Load favorite status
-      const favRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/favorites/check/${id}`,
-        { withCredentials: true }
-      );
-      setIsFavorite(favRes.data.isFavorite);
-    }
-    catch (error: any) {
-      setError(error.message);
-    }
-    finally {
-      setLoading(false);
-    }
-  };
-
-  fetchData();
-}, [id]);*/
 
     useEffect(() => {
-  if (!id) return;
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/${id}`, {
-        withCredentials: true
-      });
-      setData(res.data);
+      if (!id) return;
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/${id}`, {
+            withCredentials: true
+          });
+          setData(res.data);
 
-      // TEMP: default to "not favorited"
-      setIsFavorite(false);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchData();
-}, [id]);
+          const favoriteRes = await axios.get(
+            `${import.meta.env.VITE_API_URL}/listings/favorite/${id}`,
+            { withCredentials: true }
+          );
+          setIsFavorite(favoriteRes.data.favorite);
+        } catch (err: any) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, [id]);
 
 
   return (

@@ -132,13 +132,13 @@ export const DanesListHome: React.FC = () => {
 
         <section className="dl-card-grid">
           
-          {loading ? <LoadingSpinner size="small"/> : pageListings[currentPage - 1].map((listing) => (
+          {loading ? <LoadingSpinner size="small"/> : pageListings[currentPage-1] ? pageListings[currentPage - 1].map((listing) => (
             <ListingCard
               key={listing._id}
               listing={listing}
               onClick={() => navigate(`/listing/${listing._id}`)}
-            />
-          ))}
+            /> 
+          )) : <p>No Listings found</p>}
         </section>
 
         <Pagination

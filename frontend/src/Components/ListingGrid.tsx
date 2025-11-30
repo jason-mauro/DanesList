@@ -1,31 +1,26 @@
 // src/Components/ListingGrid.tsx
 import React from "react";
 import "../styles/ListingGrid.css";
-
-type Item = {
-  id: number;
-  title: string;
-  price: number;
-  imageUrl: string;
-  isSold?: boolean;
-};
-
+import type {ListingData} from "../types/listing.types";
+import { useNavigate } from "react-router-dom";
 type Props = {
-  items: Item[];
-  onClick?: (id: number) => void;
+  items: ListingData[];
+  onClick?: () => void;
+  myListings: boolean;
 };
 
-export const ListingGrid: React.FC<Props> = ({ items, onClick }) => {
+export const ListingGrid: React.FC<Props> = ({ items, onClick, myListings }) => {
+  const navigate = useNavigate();
   return (
     <div className="listing-grid">
       {items.map((item) => (
         <div
-          key={item.id}
+          key={item._id}
           className="listing-card"
-          onClick={() => onClick && onClick(item.id)}
+          onClick={() => myListings ? navigate(`/edit/${item._id}`) : navigate(`/listing/${item._id}`)}
         >
           <div className="listing-img-wrapper">
-            <img src={item.imageUrl} className="listing-img" />
+            <img src={item.images[0]} className="listing-img" />
             {item.isSold && <span className="listing-sold">SOLD</span>}
           </div>
 

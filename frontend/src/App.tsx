@@ -51,7 +51,7 @@ function App() {
             />
 
             <Route
-              path="/editListing"
+              path="/edit/:id"
               element={
                 <ProtectedRoute>
                   <EditListing />
