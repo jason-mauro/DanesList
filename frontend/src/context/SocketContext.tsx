@@ -1,60 +1,73 @@
-// import { createContext, useState, useEffect, useContext } from "react";
-// import type { ReactNode } from "react";
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 
+import type { ReactNode } from "react";
+import { useConversation } from "./ConversationContext";
 
-// // Define Socket type manually
-// type Socket = ReturnType<typeof io>;
+// Remove the socket.io-client import completely
+// Add this script tag to your index.html instead:
+// <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
-// // Correct context type
-// type SocketContextType = {
-//   socket: Socket | null;
-//   onlineUsers: string[];
-// };
+// Then use the global Socket object
+declare global {
+    interface Window {
+        io: any;
+    }
+}
 
-// const SocketContext = createContext<SocketContextType>({
-//   socket: null,
-//   onlineUsers: [],
-// });
+interface ServerToClientEvents {
+    newMessage: (data: {
+        conversationId: string;
+        message: string;
+        sender: string;
+        createdAt: string;
+    }) => void;
 
-// export const useSocketContext = () => useContext(SocketContext);
+    getOnlineUsers: (users: string[]) => void;
+}
 
-// interface SocketProviderProps {
-//   children: ReactNode;
-// }
+type AppSocket = any; // Use 'any' for now with CDN version
 
-// export const SocketContextProvider = ({ children }: SocketProviderProps) => {
-//   const [socket, setSocket] = useState<Socket | null>(null);
-//   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+interface SocketContextValue {
+    socket: AppSocket | null;
+    onlineUsers: string[];
+}
 
-//   const authUser = localStorage.getItem("userId");
+const SocketContext = createContext<SocketContextValue>({
+    socket: null,
+    onlineUsers: [],
+});
 
-//   useEffect(() => {
-//     if (authUser) {
-//       const newSocket = io("http://localhost:9000", {
-//         query: { userId: authUser },
-//       });
+export const useSocketContext = () => useContext(SocketContext);
 
-//       setSocket(newSocket);
+export const SocketContextProvider = ({ children }: { children: ReactNode }) => {
+    const [socket, setSocket] = useState<AppSocket | null>(null);
+    const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
-//       newSocket.on("getOnlineUsers", (users: string[]) => {
-//         setOnlineUsers(users);
-//       });
+    const authUser = localStorage.getItem("userId");
 
-//       return () => {
-//         newSocket.disconnect();
-//         setSocket(null);
-//       };
-//     } else {
-//       if (socket) {
-//         socket.disconnect();
-//         setSocket(null);
-//       }
-//     }
-//   }, [authUser]);
+    useEffect(() => {
+        if (!authUser || !window.io) return;
 
-//   return (
-//     <SocketContext.Provider value={{ socket, onlineUsers }}>
-//       {children}
-//     </SocketContext.Provider>
-//   );
-// };
+        const newSocket = window.io("http://localhost:9000", {
+            query: { userId: authUser },
+            withCredentials: true,
+        });
+
+        setSocket(newSocket);
+
+        newSocket.on("getOnlineUsers", (users: string[]) => setOnlineUsers(users));
+
+        return () => newSocket.disconnect();
+    }, [authUser]);
+
+    return (
+        <SocketContext.Provider value={{ socket, onlineUsers }}>
+            {children}
+        </SocketContext.Provider>
+    );
+};

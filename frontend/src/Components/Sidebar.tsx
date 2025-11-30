@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
+import { useConversation } from "../context/ConversationContext";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -12,6 +13,7 @@ type SidebarProps = {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const navigate = useNavigate();
+  const {unreadCount} = useConversation();
 
   const handleSignOut = async () => {
     try {
@@ -111,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                 <div className="dl-nav-text dl-nav-text-row">
                 <div>
                     <span className="dl-nav-title">Messages</span>
-                    <span className="dl-nav-subtitle"> 1 Unread</span>
+                    <span className="unread-badge">{unreadCount > 0 ? unreadCount : ""}</span>
                 </div>
                 <span className="dl-nav-dot" />
                 </div>

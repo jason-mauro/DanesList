@@ -1,7 +1,9 @@
 import {Request, Response} from "express";
 import Conversation from "../models/conversations.model.js";
 import Message from "../models/messages.model.js";
-import { getReceiverSocketId, io } from "../socket/socket.js";
+import  { getReceiverSocketId } from "../socket/socket.js"
+import {io} from "../index.js";
+import { format } from "path";
 
 // GET /conversations
 export const getUserConversations = async (req: Request, res: Response) => {
@@ -18,20 +20,28 @@ export const getUserConversations = async (req: Request, res: Response) => {
         })
         .sort({ updatedAt: -1 });
 
-        // Clean up the response - participants will be an array with one user
-        const formattedConversations = await Promise.all(conversations.map(async(conv) => {
-            const lastMessage = await Message.findById(conv.lastMessage);
-            return ({
-                conversationId: conv._id,
-                lastMessage: lastMessage?.message,
-                otherUser: conv.participants[0], // The other person
-                updatedAt: conv.updatedAt
-            });
-        }));
+        // Get unread counts for each conversation
+        const conversationsWithUnread = await Promise.all(
+            conversations.map(async (conv) => {
+                const unreadCount = await Message.countDocuments({
+                    conversationId: conv._id,
+                    receiverId: userID,
+                    read: false
+                });
 
+                const lastMessage = await Message.findById(conv.lastMessage);
+                return {
+                    conversationId: conv._id,
+                    otherUser: conv.participants[0],
+                    lastMessage: lastMessage?.message,
+                    updatedAt: conv.updatedAt,
+                    unreadCount // Add unread count
+                };
+            })
+        );
 
+        return res.status(200).json(conversationsWithUnread);
 
-        res.json(formattedConversations);
     } catch (err: any) {
         res.status(500).json({ error: err.message });
     }
@@ -41,15 +51,16 @@ export const getUserConversations = async (req: Request, res: Response) => {
 // GET /conversations/:id/messages?limit=20&page=1
 export const getConversationMessages = async (req: Request, res: Response) => {
     try {
-      const { conversationId } = req.params;
+      const { id} = req.params;
     
-      const messages = await Message.find({ conversation: conversationId })
+      const messages = await Message.find({ conversationId: id})
         .sort({ createdAt: -1 });
   
-      res.json(messages.reverse()); // oldest → newest
+      return res.status(200).json(messages.reverse()); // oldest → newest
+
   
     } catch (err: any) {
-      res.status(500).json({ error : err.message });
+      return res.status(500).json({ error : err.message });
     }
 };
 
@@ -72,7 +83,7 @@ export const sendMessageToUser = async (req: Request, res: Response) => {
 
         // Create message
         const message = await Message.create({
-            conversation: conversation._id,
+            conversationId: conversation._id,
             senderId: senderId,
             message: text,
             receiverId: receiverId
@@ -106,7 +117,12 @@ export const sendMessageToUser = async (req: Request, res: Response) => {
         // Send socket event
         const receiverSocketId = getReceiverSocketId(receiverId);
         if (receiverSocketId) {
-            io.to(receiverSocketId).emit("newMessage", message);
+            io.to(receiverSocketId).emit("newMessage", {
+                conversationId: conversation?._id.toString() || "",
+                message: message.message,
+                sender: senderId?.toString() || "", 
+                createdAt: conversation?.updatedAt.toString() || ""
+            });
         }
 
         res.json({
@@ -117,6 +133,30 @@ export const sendMessageToUser = async (req: Request, res: Response) => {
     } catch (error: any) {
         console.log(error)
         res.status(500).json({ error: error.message });
+    }
+};
+
+export const markConversationAsRead = async (req: Request, res: Response) => {
+    try {
+        const { conversationId } = req.params;
+        const userId = req.user?._id;
+
+        // Mark all messages in this conversation as read where user is receiver
+        await Message.updateMany(
+            {
+                conversationId: conversationId,
+                receiverId: userId,
+                read: false
+            },
+            {
+                read: true,
+
+            }
+        );
+
+        res.json({ success: true });
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
     }
 };
 
@@ -171,9 +211,9 @@ export const sendMessage = async (req: Request, res: Response) => {
         
 
         const message = await Message.create({
-            conversation: conversationId,
-            sender: req.user?._id,
-            text
+            conversationId: conversationId,
+            senderId: req.user?._id,
+            message: text,
         });
 
         await Conversation.findByIdAndUpdate(
@@ -198,10 +238,14 @@ export const sendMessage = async (req: Request, res: Response) => {
 
 
         const receiverSocketId = getReceiverSocketId(receiverId!);
-		if (receiverSocketId) {
-			// io.to(<socket_id>).emit() used to send events to specific client
-			io.to(receiverSocketId).emit("newMessage", message);
-		}
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", {
+                conversationId: conversation?._id.toString() || "",
+                message: message.message,
+                sender: senderId || "", 
+                createdAt: conversation?.updatedAt.toString() || ""
+            });
+        }
 
         res.json(populated);
     } catch (error: any){

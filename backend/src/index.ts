@@ -6,12 +6,18 @@ import messageRouter from "./routes/message.routes.js";
 import dotenv from "dotenv";
 import connectDB from "./db/connectToMongo.js";
 import cookieParser from "cookie-parser";
-import {app, server} from "./socket/socket.js";
+import {setupSocket} from "./socket/socket.js";
+import http from "http";
 
 dotenv.config();
 
 // const PORT: number = 3000;
 const PORT: number = Number(process.env.PORT) || 7002;
+
+const app = express();
+const server = http.createServer(app);
+
+export const io = setupSocket(server);
 
 // Cors configuration
 app.use(cors({
@@ -20,13 +26,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
 
 
 // Middleware

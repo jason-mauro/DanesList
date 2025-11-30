@@ -3,7 +3,6 @@ import type { User } from "../types/user.type";
 import { useConversation } from "../context/ConversationContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import type { MessageData } from "../types/messages.types";
 
 type ConversationThreadProps = {
   newMessageTo?: User
@@ -25,6 +24,7 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
 
   const sendMessage = async() => {
       try {
+        if (messageContent === "") return;
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages/`, {receiverId: selectedConversation ? selectedConversation.otherUser._id : newMessageTo?._id, text: messageContent}, {withCredentials: true});
         const data = response.data;
         const newMessage = data.message;
@@ -41,7 +41,9 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
 
   useEffect(() => {
     const fetchData = async() => {
+      if (!selectedConversation) return;
       try {
+        console.log(`${import.meta.env.VITE_API_URL}/messages/${selectedConversation?.conversationId}/messages`)
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages/${selectedConversation?.conversationId}/messages`, {withCredentials: true});
         const data = response.data;
         setMessages(data);

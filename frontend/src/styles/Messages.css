@@ -16,6 +16,71 @@
   overflow-y: auto;
 }
 
+/* Update your unread badge styles */
+.unread-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  line-height: 1;
+
+  margin-left: 6px;
+  animation: badge-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Animation when badge appears */
+@keyframes badge-appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+
+
+/* Better positioning in conversation list */
+.messages-name {
+  font-weight: 600;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Handle double-digit numbers better */
+.unread-badge {
+  min-width: 20px;
+}
+
+.unread-badge:where([data-count="10"], [data-count="11"], [data-count="12"]) {
+  min-width: 24px;
+  padding: 0 7px;
+  font-size: 10px;
+}
+
+/* 99+ style */
+.unread-badge.max {
+  min-width: 26px;
+  padding: 0 6px;
+  font-size: 10px;
+}
+
+
 .messages-title {
   font-size: 18px;
   font-weight: 600;
