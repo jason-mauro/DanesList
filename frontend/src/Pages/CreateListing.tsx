@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import { UploadImages } from "../Components/UploadImages";
-import { Toast } from "../Components/Toast";
 import { ToastPortal } from "../Components/ToastPortal";
 import type { ListingInput } from "../types/listing.types";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import "../styles/CreateListing.css";
 import LoadingSpinner from "../Components/LoadingSpinner";
@@ -22,6 +22,7 @@ export const CreateListing: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [toast, setToast] = useState<{message: string, type: "success" | "error"} | null>(null);
+  const navigate = useNavigate();
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -104,13 +105,16 @@ export const CreateListing: React.FC = () => {
       images
     };
 
-    await axios.post(
+    const res = await axios.post(
       `${import.meta.env.VITE_API_URL}/listings/create`,
       listingData,
       { withCredentials: true }
     );
 
     setToast({ message: "Listing created successfully!", type: "success" });
+    setTimeout(() => {
+    navigate(`/listing/${res.data.id}`);
+    }, 1000);
 
     // Reset form fields
     setTitle("");
