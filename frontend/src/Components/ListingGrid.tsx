@@ -9,7 +9,7 @@ type Props = {
   myListings: boolean;
 };
 
-export const ListingGrid: React.FC<Props> = ({ items, onClick, myListings }) => {
+export const ListingGrid: React.FC<Props> = ({ items, myListings }) => {
   const navigate = useNavigate();
   return (
     <div className="listing-grid">

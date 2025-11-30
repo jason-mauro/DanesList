@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
-import DefaultAvatar from "../assets/default-avatar.jpg"
 
 type SidebarProps = {
   isOpen: boolean;

@@ -1,18 +1,15 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import authRouter from "./routes/auth.routes.js"; 
 import listingRouter from "./routes/listing.routes.js"
-
+import messageRouter from "./routes/message.routes.js";
 import dotenv from "dotenv";
 import connectDB from "./db/connectToMongo.js";
 import cookieParser from "cookie-parser";
-import { Category } from "./models/category.model.js";
-import { CategoryInputSchema } from "./schemas/category.schema.js";
-
+import {app, server} from "./socket/socket.js";
 
 dotenv.config();
 
-const app = express();
 // const PORT: number = 3000;
 const PORT: number = Number(process.env.PORT) || 7002;
 
@@ -39,9 +36,10 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/listings", listingRouter )
+app.use("/api/messages", messageRouter);
 
 // Start server
-app.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, "0.0.0.0", () => {
   connectDB();
   console.log(`Server running on port ${PORT}`);
 });

@@ -8,20 +8,32 @@ export const getUserConversations = async (req: Request, res: Response) => {
     try {
         const userID = req.user?._id;
 
-        const conversations = await Conversation.find(({
+        const conversations = await Conversation.find({
             participants: userID
-        }))
-        .populate("participants", "username avatar")
-        .populate({
-            path: "lastMessage",
-            select: "text sender createdAt",
-            populate: {path: "sender", select: "username avatar"}
         })
-        .sort({updatedAt: -1})
+        .populate({
+            path: "participants",
+            match: { _id: { $ne: userID } }, // Only populate the other user
+            select: "-password"
+        })
+        .sort({ updatedAt: -1 });
 
-        res.json(conversations)
-    } catch (err: any){
-        res.status(500).json({error: err.message})
+        // Clean up the response - participants will be an array with one user
+        const formattedConversations = await Promise.all(conversations.map(async(conv) => {
+            const lastMessage = await Message.findById(conv.lastMessage);
+            return ({
+                conversationId: conv._id,
+                lastMessage: lastMessage?.message,
+                otherUser: conv.participants[0], // The other person
+                updatedAt: conv.updatedAt
+            });
+        }));
+
+
+
+        res.json(formattedConversations);
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
     }
 };
 
@@ -30,20 +42,123 @@ export const getUserConversations = async (req: Request, res: Response) => {
 export const getConversationMessages = async (req: Request, res: Response) => {
     try {
       const { conversationId } = req.params;
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 20;
-      
-  
+    
       const messages = await Message.find({ conversation: conversationId })
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .populate("sender", "username avatar");
+        .sort({ createdAt: -1 });
   
       res.json(messages.reverse()); // oldest → newest
   
     } catch (err: any) {
       res.status(500).json({ error : err.message });
+    }
+};
+
+// Alternative: POST /messages - Send message and auto-create conversation if needed
+export const sendMessageToUser = async (req: Request, res: Response) => {
+    try {
+        const { receiverId, text } = req.body;
+        const senderId = req.user?._id;
+
+        // Find or create conversation
+        let conversation = await Conversation.findOne({
+            participants: { $all: [senderId, receiverId] }
+        });
+
+        if (!conversation) {
+            conversation = await Conversation.create({
+                participants: [senderId, receiverId]
+            });
+        }
+
+        // Create message
+        const message = await Message.create({
+            conversation: conversation._id,
+            senderId: senderId,
+            message: text,
+            receiverId: receiverId
+        });
+
+        // Update conversation
+        conversation = await Conversation.findByIdAndUpdate(
+            conversation._id,
+            {
+                lastMessage: message._id,
+                updatedAt: new Date()
+            },
+            { new: true }
+        )
+        .populate({
+            path: "participants",
+            match: { _id: { $ne: senderId } },
+            select: "-password"
+        })
+
+        const lastMessage = await Message.findById(conversation?.lastMessage);
+
+        // Format conversation data
+        const formattedConversation = ({
+            conversationId: conversation!._id,
+            lastMessage: lastMessage?.message,
+            otherUser: conversation!.participants[0],
+            updatedAt: conversation!.updatedAt
+        });
+
+        // Send socket event
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", message);
+        }
+
+        res.json({
+            message: message,
+            conversation: formattedConversation
+        });
+
+    } catch (error: any) {
+        console.log(error)
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// GET /conversations/check/:otherUserId - Check if conversation exists between two users
+// GET /conversations/check/:otherUserId - Check if conversation exists between two users
+export const checkConversationExists = async (req: Request, res: Response) => {
+    try {
+        const { otherUserId } = req.params;
+        const currentUserId = req.user?._id;
+
+        const conversation = await Conversation.findOne({
+            participants: { $all: [currentUserId, otherUserId] }
+        })
+        .populate({
+            path: "participants",
+            match: { _id: { $ne: currentUserId } },
+            select: "-password"   // exclude password, include everything else
+        })
+
+        if (!conversation) {
+            return res.json({
+                exists: false,
+                conversation: null
+            });
+        }
+
+        const lastMessage = await Message.findById(conversation.lastMessage);
+
+        const formattedConversation = {
+            conversationId: conversation._id,
+            lastMessage: lastMessage?.message,
+            otherUser: conversation.participants[0],
+            updatedAt: conversation.updatedAt
+        };
+
+        return res.json({
+            exists: true,
+            conversation: formattedConversation
+        });
+
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
     }
 };
 
