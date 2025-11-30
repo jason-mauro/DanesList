@@ -1,48 +1,49 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Sidebar } from "../Components/Sidebar";
 import { UploadImages } from "../Components/UploadImages";
 import { ToastPortal } from "../Components/ToastPortal";
-import type { ListingInput } from "../types/listing.types";
+import type { ListingData, ListingInput } from "../types/listing.types";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
 import "../styles/CreateListing.css";
-import LoadingSpinner from "../Components/LoadingSpinner";
 
-export const CreateListing: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+interface EditListingPopupProps {
+  listingData: ListingData;
+  onClose: () => void;
+  onSuccess: (updatedData: ListingData) => void;
+}
 
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [description, setDescription] = useState("");
+export const EditListingPopup: React.FC<EditListingPopupProps> = ({
+  listingData,
+  onClose,
+  onSuccess,
+}) => {
+  const [title, setTitle] = useState(listingData.title);
+  const [price, setPrice] = useState(listingData.price.toString());
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(listingData.categories);
+  const [description, setDescription] = useState(listingData.description);
   const [files, setFiles] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(listingData.images);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [toast, setToast] = useState<{message: string, type: "success" | "error"} | null>(null);
-  const navigate = useNavigate();
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategories = async () => {
       try {
         setLoading(true);
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/categories`, {
           withCredentials: true
         });
-
-        const data = res.data;
-        setCategories(data);
+        setCategories(res.data);
       } catch (error: any) {
-        setError(error.message);
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -56,26 +57,16 @@ export const CreateListing: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleCategoryToggle = (categoryValue: string) => {
-    setSelectedCategories((prev) => {
-      if (prev.includes(categoryValue)) {
-        return prev.filter((c) => c !== categoryValue);
-      } else {
-        return [...prev, categoryValue];
-      }
-    });
-  };
-
-  const handleRemoveCategory = (categoryValue: string) => {
-    setSelectedCategories((prev) => prev.filter((c) => c !== categoryValue));
-  };
-
   const handleAddFiles = (newFiles: File[]) => {
     setFiles((prev) => [...prev, ...newFiles]);
   };
 
   const handleRemoveFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveExistingImage = (index: number) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const filesToBase64 = (files: File[]): Promise<string[]> => {
@@ -91,79 +82,68 @@ export const CreateListing: React.FC = () => {
       )
     );
   };
+
   const handleSubmit = async () => {
-  try {
-    const priceValue = Number(price);
-    const images = await filesToBase64(files);
+    try {
+      const priceValue = Number(price);
+      const newImages = await filesToBase64(files);
+      const allImages = [...existingImages, ...newImages];
 
-    const listingData: ListingInput = {
-      title,
-      price: priceValue,
-      description,
-      categories: selectedCategories,
-      images
-    };
+      // Validate at least 1 image
+      if (allImages.length < 1) {
+        setToast({message: "At least 1 image required", type: "error"});
+        return;
+      }
 
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/listings/create`,
-      listingData,
-      { withCredentials: true }
-    );
+      const updatedData = {
+        ...listingData,
+        title,
+        price: priceValue,
+        description,
+        categories: selectedCategories,
+        images: allImages
+      };
 
-    setToast({ message: "Listing created successfully!", type: "success" });
-    setTimeout(() => {
-    navigate(`/listing/${res.data.id}`);
-    }, 1000);
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/listings/update`,
+        updatedData,
+        { withCredentials: true }
+      );
 
-    // Reset form fields
-    setTitle("");
-    setPrice("");
-    setSelectedCategories([]);
-    setDescription("");
-    setFiles([]);
-
-
-  } catch (error: any) {
-    setToast({ message: "Failed to create listing", type: "error" });
-    console.error(error);
-  }
-};
-
+      onSuccess(updatedData);
+    } catch (error: any) {
+      console.error("Failed to update listing:", error);
+    }
+  };
 
   return (
     <>
-    <ToastPortal
+      <ToastPortal
         toast={toast}
         onClose={() => setToast(null)}
-    />
-        {/* LAYOUT CONTAINER */}
-      <div className="dl-layout">
-        <Sidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
-
-        {loading ? (
-          <LoadingSpinner size="small" />
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
-          <main className="dl-main">
-            <div className="cl-page">
-              <h1 className="cl-title">Create a New Listing</h1>
-
-              <div className="cl-form-container">
-
+      />
+      <div className="vl-confirm-overlay">
+        <div className="edit-popup-box">
+          <div className="edit-popup-header">
+            <h2>Edit Listing</h2>
+            <button className="edit-popup-close" onClick={onClose}>×</button>
+          </div>
+  
+          <div className="edit-popup-content">
+            {loading ? (
+              <p>Loading categories...</p>
+            ) : (
+              <>
                 <div className="cl-field">
                   <label>Title</label>
                   <input value={title} onChange={(e) => setTitle(e.target.value)} />
                 </div>
-
+  
                 <div className="cl-field">
                   <label>Price</label>
                   <input value={price} onChange={(e) => setPrice(e.target.value)} />
                 </div>
-
+  
                 <div className="cl-field">
                   <label>Categories</label>
                   <div className="cl-multiselect" ref={dropdownRef}>
@@ -196,7 +176,7 @@ export const CreateListing: React.FC = () => {
                       </div>
                       <span className="cl-dropdown-arrow">{dropdownOpen ? "▲" : "▼"}</span>
                     </div>
-
+  
                     {dropdownOpen && (
                       <div className="cl-dropdown-menu">
                         {categories.map((cat) => (
@@ -219,7 +199,7 @@ export const CreateListing: React.FC = () => {
                     )}
                   </div>
                 </div>
-
+  
                 <div className="cl-field">
                   <label>Description</label>
                   <textarea
@@ -227,7 +207,26 @@ export const CreateListing: React.FC = () => {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
-
+  
+                {existingImages.length > 0 && (
+                  <div className="cl-field">
+                    <label>Current Images</label>
+                    <div className="existing-images-grid">
+                      {existingImages.map((img, idx) => (
+                        <div key={idx} className="existing-image-item">
+                          <img src={img} alt={`Existing ${idx}`} />
+                          <button
+                            className="remove-existing-img"
+                            onClick={() => handleRemoveExistingImage(idx)}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+  
                 <div className="cl-upload-wrapper">
                   <UploadImages
                     files={files}
@@ -235,15 +234,20 @@ export const CreateListing: React.FC = () => {
                     onRemoveFile={handleRemoveFile}
                   />
                 </div>
-
-                <button className="cl-submit-btn" onClick={handleSubmit}>
-                  Submit
-                </button>
-              </div>
-            </div>
-          </main>
-        )}
-      </div>
+  
+                <div className="edit-popup-buttons">
+                  <button className="confirm-no" onClick={onClose}>
+                    Cancel
+                  </button>
+                  <button className="confirm-yes" onClick={handleSubmit}>
+                    Save Changes
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div> 
     </>
   );
 };

@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         {/* TODO make a page that sends you to your listings, similar to favorite listings */}
         {/* Then when they click a listing from there, send them to manage listing for that specific listing */}
 
-        <Link to="/listing" className="sidebar-link">
+        <Link to="/manageListings" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">🗒️</span>
@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             </div>
         </Link>
 
-        <Link to="/editListing" className="sidebar-link">
+        <Link to="/favorites" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">⭐️</span>

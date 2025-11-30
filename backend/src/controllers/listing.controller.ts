@@ -6,6 +6,7 @@ import { ListingInputSchema } from "../schemas/listing.schema.js";
 import { ListingImage } from "../models/listingImage.model.js"
 import { CategoryInputSchema } from "../schemas/category.schema.js";
 import { ListingCategory } from "../models/listingCategory.model.js";
+import { ListingFavorites } from "../models/listingFavorite.model.js";
 const sortAttributeMap: Record<string, Record<string, 1 | -1>> = {
     newest:   { createdAt: -1 },
     oldest:   { createdAt: 1 },
@@ -13,20 +14,23 @@ const sortAttributeMap: Record<string, Record<string, 1 | -1>> = {
     minPrice: { price: 1 }
   };
 
-// GET /listings/sortBy="newest"&category="Electronics&name="whatever"
+// GET /listings/sortBy="newest"&category="Electronics&name="whatever"&user=true
 export const getListings = async (req: Request, res: Response) => {
-    try {
-      const sortBy = (req.query.sortBy as string | undefined) ?? "newest";
-      const categoryName = (req.query.category as string | undefined) ?? null;
-      const nameSearch = (req.query.name as string | undefined) ?? null;
+  try {
+    const sortBy = (req.query.sortBy as string | undefined) ?? "newest";
+    const categoryName = (req.query.category as string | undefined) ?? null;
+    const nameSearch = (req.query.name as string | undefined) ?? null;
+    const userListings = (req.query.user as string | undefined) ?? null;
+    const favoritesOnly = (req.query.favorites as string | undefined) === "true"; // <-- new
+
+    const userID = req.user?._id; // needed for favorites filter
 
     // if a category filter is provided, fetch its _id first
     let categoryID: mongoose.Types.ObjectId | null = null;
     if (categoryName) {
       const category = await Category.findOne({ name: categoryName }).select("_id");
       if (!category) {
-        // if category name invalid, return empty list
-        return res.status(200).json({ listings: []});
+        return res.status(200).json({ listings: [] });
       }
       categoryID = category._id as mongoose.Types.ObjectId;
     }
@@ -35,7 +39,7 @@ export const getListings = async (req: Request, res: Response) => {
     const pipeline: any[] = [
       {
         $lookup: {
-          from: "listingCategories",   
+          from: "listingCategories",
           localField: "_id",
           foreignField: "listingID",
           as: "categoryLinks"
@@ -46,19 +50,26 @@ export const getListings = async (req: Request, res: Response) => {
     if (nameSearch){
       pipeline.push({
         $match: {
-          title: { $regex: nameSearch, $options: "i"}
+          title: { $regex: nameSearch, $options: "i" }
         }
-      })
+      });
     }
 
-    // add match by category if provided
+    if (userListings) {
+      pipeline.push({
+        $match: {
+          userID
+        }
+      });
+    }
+
     if (categoryID) {
       pipeline.push({
         $match: { "categoryLinks.categoryID": categoryID }
       });
     }
 
-    // image lookup
+    // Lookup images
     pipeline.push({
       $lookup: {
         from: "listingImages",
@@ -68,7 +79,7 @@ export const getListings = async (req: Request, res: Response) => {
       }
     });
 
-    // user lookup
+    // Lookup user info
     pipeline.push({
       $lookup: {
         from: "users",
@@ -81,33 +92,126 @@ export const getListings = async (req: Request, res: Response) => {
       }
     });
 
-    // Transform the arrays to extract just the values you need
+    // Lookup favorites for the current user
+    if (userID) {
+      pipeline.push({
+        $lookup: {
+          from: "listingfavorites",
+          let: { listingId: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $and: [{ $eq: ["$listingID", "$$listingId"] }, { $eq: ["$userID", userID] }] } } }
+          ],
+          as: "favorites"
+        }
+      });
+
+      // if favoritesOnly=true, filter only listings that exist in the user's favorites
+      if (favoritesOnly) {
+        pipeline.push({
+          $match: { "favorites.0": { $exists: true } } // only listings where favorites array is not empty
+        });
+      }
+    }
+
+    // Transform arrays
     pipeline.push({
       $addFields: {
         images: "$images.image",
-        user: { $arrayElemAt: ["$user", 0] }
+        user: { $arrayElemAt: ["$user", 0] },
+        isFavorited: { $gt: [{ $size: "$favorites" }, 0] } // adds isFavorited flag
       }
     });
 
-    // Remove intermediate fields
-    pipeline.push({
-      $project: {
-        categoryLinks: 0
-      }
-    });
+    // Clean up intermediate fields
+    pipeline.push({ $project: { categoryLinks: 0, favorites: 0 } });
 
     pipeline.push({ $sort: sortAttributeMap[sortBy] });
 
     const listings = await Listing.aggregate(pipeline);
 
-    return res.status(200).json({ listings })
+    return res.status(200).json({ listings });
 
-    } catch (err: any) {
-      res.status(500).json({ error : err.message });
-    }
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({ error: err.message });
+  }
 };
 
+export const deleteListing = async (req: Request, res: Response) => {
+  try {
+    const listingData = req.body;
+    const listingID = listingData._id;
 
+    await Listing.deleteOne({_id: listingID});
+    await ListingImage.deleteMany({listingID});
+    await ListingCategory.deleteMany({listingID});
+    await ListingFavorites.deleteMany({listingID});
+
+    return res.status(200).json({message: "Deleted successfully"})
+  } catch (error: any){
+    console.log(error.message);
+    return res.status(500).json({message: error.message});
+  }
+}
+
+// POST /listings/update
+export const updateListing = async (req: Request, res: Response) => {
+  try {
+    const listingData = req.body;
+
+    // if (req.user?._id != listingData.user._id){
+    //   return res.status(401).json({message: "Unauthorized access to update listing"})
+    // }
+
+    // Update listing
+    await Listing.findByIdAndUpdate(
+      listingData._id,
+      {
+        price: listingData.price,
+        title: listingData.title,
+        description: listingData.description,
+        isSold: listingData.isSold,
+        updatedAt: new Date()
+      }
+    );
+
+    const listingID = listingData._id;
+
+    // ============ IMAGES ============
+    // Delete all old images
+    await ListingImage.deleteMany({ listingID });
+
+    // Add all new images
+    const imageDocuments = listingData.images.map((image: string) => ({
+      image,
+      listingID
+    }));
+    await ListingImage.insertMany(imageDocuments);
+
+    // ============ CATEGORIES ============
+    // Delete all old categories
+    await ListingCategory.deleteMany({ listingID });
+
+    // Get category IDs for new categories
+    const categories = await Promise.all(
+      listingData.categories.map((name: string) => Category.findOne({ name }))
+    );
+
+    // Add all new categories
+    const categoryDocuments = categories
+      .filter(cat => cat !== null) // Filter out any null results
+      .map((cat) => ({
+        listingID,
+        categoryID: cat._id
+      }));
+    await ListingCategory.insertMany(categoryDocuments);
+
+    return res.status(200).json({ success: true });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 // GET /listings/:id
 export const getListing = async (req: Request, res: Response) => {
@@ -250,3 +354,44 @@ export const addCategory =  async (req: Request, res:Response) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+
+// POST /listings/favorite
+export const updateFavorite = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const userID = req.user?._id;
+  
+    const exists = await ListingFavorites.findOne({ listingID: id, userID });
+  
+    if (exists) {
+      await ListingFavorites.deleteOne({ listingID: id, userID });
+    } else {
+      await ListingFavorites.create({ userID, listingID: id });
+    }
+  
+    return res.status(200).json({ success: true });
+  
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
+  }
+}
+
+export const getFavorite = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const userID = req.user?._id;
+  
+    const exists = await ListingFavorites.findOne({ listingID: id, userID });
+  
+    if (exists) {
+      return res.status(200).json({favorite: true});
+    } else {
+      return res.status(200).json({favorite: false});
+    }
+  
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
+  }
+}

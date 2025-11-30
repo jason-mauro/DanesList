@@ -1,26 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import "../styles/ViewListing.css"; // reuse same styling
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import type { ListingData } from "../types/listing.types";
+import LoadingSpinner from "../Components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
+import { EditListingPopup } from "../Components/EditListingForm";
+
 
 export const EditListing: React.FC = () => {
+  const navigate = useNavigate();
+  const {id} = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isSold, setIsSold] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ListingData>();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const [showSetSoldConfirm, setShowSetSoldConfirm] = useState(false);
+  const [showSoldSuccess, setShowSoldSuccess] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
 
-  // TEMP MOCK DATA (same camera listing)
-  const listing = {
-    title: "Fujifilm Camera",
-    price: 0,
-    imageUrl:
-      "https://images.pexels.com/photos/1203803/pexels-photo-1203803.jpeg?w=1200",
-    description:
-      "Camera I had lying around. Please contact to negotiate price. I know what I have",
-    tags: ["Camera"],
-    isSold: false,
-    seller: {
-      name: "Seller Name",
-      avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-    },
-  };
+
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/listings/${id}`, {
+          withCredentials: true
+        });
+        setData(res.data);
+      } catch (err: any) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  const deleteListing = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/listings/delete`, data, {withCredentials: true});
+      setShowDeleteConfirm(false);
+      setShowDeleteSuccess(true);
+    } catch (error: any){
+        console.log(error)
+    }
+  }
+
+  const toggleSold = async () => {
+    try {
+      const updatedData = {
+        ...data!,
+        isSold: !data?.isSold,
+      };
+      
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/listings/update`, 
+        updatedData, 
+        {withCredentials: true}
+      );
+      
+      setData(updatedData);
+      setShowSetSoldConfirm(false);
+      setShowSoldSuccess(true);
+    } catch (error: any){
+        console.log(error)
+    }
+  }
 
   return (
     <div className="dl-layout">
@@ -28,25 +79,25 @@ export const EditListing: React.FC = () => {
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
-
+      {loading ? <LoadingSpinner size="small" /> : !data ? <p>No listing found.</p> :  
       <main className="dl-main">
         <div className="vl-page">
           {/* FORM CONTAINER */}
           <div className="vl-container">
             {/* MAIN LISTING IMAGE */}
-            <div className={`vl-image-wrapper ${isSold ? "sold" : ""}`}>
-                <img src={listing.imageUrl} alt={listing.title} className="vl-image" />
-                {isSold && <div className="vl-sold-banner">SOLD</div>}
+            <div className={`vl-image-wrapper ${data.isSold ? "sold" : ""}`}>
+                <img src={data.images[0]} alt={data.title} className="vl-image" />
+                {data.isSold && <div className="vl-sold-banner">SOLD</div>}
             </div>
 
 
 
             {/* TITLE */}
-            <h1 className="vl-title">{listing.title}</h1>
+            <h1 className="vl-title">{data.title}</h1>
 
             {/* TAGS */}
             <div className="vl-tags">
-              {listing.tags.map((tag, i) => (
+              {data.categories.map((tag, i) => (
                 <span key={i} className="vl-tag">
                   {tag}
                 </span>
@@ -54,14 +105,14 @@ export const EditListing: React.FC = () => {
             </div>
 
             {/* PRICE */}
-            <div className="vl-price">${listing.price}</div>
+            <div className="vl-price">${data.price}</div>
 
             <p className="vl-status-label">Listing Status</p>
 
             {/* DESCRIPTION */}
             <div className="vl-section">
               <h2>Description</h2>
-              <p>{listing.description}</p>
+              <p>{data.description}</p>
             </div>
 
             {/* SELLER INFO */}
@@ -69,23 +120,96 @@ export const EditListing: React.FC = () => {
               <h2>Seller Information</h2>
 
               <div className="vl-seller-row">
-                <img className="vl-seller-avatar" src={listing.seller.avatar} />
+                <img className="vl-seller-avatar" src={data.user.avatar} />
                 <div>
-                  <div className="vl-seller-name">{listing.seller.name}</div>
+                  <div className="vl-seller-name">{data.user.username}</div>
                 </div>
               </div>
             </div>
 
             {/* CONFIRMATION PAGE BUTTONS */}
             <div className="vl-confirm-buttons">
-              <button className="vl-btn-edit">Modify Listing</button>
-              <button className="vl-btn-sold" onClick={() => setIsSold(true)}>Mark Sold</button>
+            <button className="vl-btn-edit" onClick={() => setShowEditPopup(true)}>
+              Modify Listing
+            </button>
+              <button className="vl-btn-sold" onClick={() => setShowSetSoldConfirm(true)}>
+                {data.isSold ? "Mark as For Sale" : "Mark as Sold"}
+              </button>
 
-              <button className="vl-btn-delete">Delete Listing</button>
+              <button className="vl-btn-delete" onClick={() => setShowDeleteConfirm(true)}>Delete Listing</button>
             </div>
+
+            {showSetSoldConfirm && (
+              <div className="vl-confirm-overlay">
+                  <div className="vl-confirm-box">
+                  <p>{!data.isSold ? "Mark this listing as sold?" : "Mark this item as for sale?"}</p>
+                  <div className="vl-confirm-buttons">
+                      <button className="confirm-yes" onClick={toggleSold}>Yes</button>
+                      <button className="confirm-no" onClick={() => setShowSetSoldConfirm(false)}>Cancel</button>
+                  </div>
+                  </div>
+              </div>
+              )}
+
+            {showSoldSuccess && (
+              <div className="vl-confirm-overlay">
+                <div className="vl-confirm-box">
+                  <p><b>Success</b></p>
+                  <div className="vl-confirm-buttons">
+                    <button 
+                      className="confirm-yes" 
+                      onClick={() => setShowSoldSuccess(false)}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showDeleteConfirm && (
+              <div className="vl-confirm-overlay">
+                  <div className="vl-confirm-box">
+                  <p>Delete this listing?</p>
+                  <p><b>This action can not be undone</b></p>
+                  <div className="vl-confirm-buttons">
+                      <button className="confirm-yes" onClick={deleteListing}>Yes</button>
+                      <button className="confirm-no" onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
+                  </div>
+                  </div>
+              </div>
+              )}
+
+            {showDeleteSuccess && (
+              <div className="vl-confirm-overlay">
+                <div className="vl-confirm-box">
+                  <p><b>Successfully deleted</b></p>
+                  <div className="vl-confirm-buttons">
+                    <button 
+                      className="confirm-yes" 
+                      onClick={() => navigate("/manageListings")}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {showEditPopup && (
+            <EditListingPopup
+              listingData={data}
+              onClose={() => setShowEditPopup(false)}
+              onSuccess={(updatedData: ListingData) => {
+                setData(updatedData);
+                setShowEditPopup(false);
+              }}
+            />
+          )}
           </div>
         </div>
       </main>
+}
     </div>
   );
 };
