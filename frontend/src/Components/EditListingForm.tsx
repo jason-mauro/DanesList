@@ -247,7 +247,7 @@ export const EditListingPopup: React.FC<EditListingPopupProps> = ({
             )}
           </div>
         </div>
-      </div>  {/* This closing tag was missing */}
+      </div> 
     </>
   );
 };
