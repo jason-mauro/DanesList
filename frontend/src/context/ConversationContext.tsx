@@ -97,7 +97,7 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
           }
         }
         fetchData();
-      }, []);
+      }, [selectedConversation]);
 
     // Mark conversation as read
     const markConversationAsRead = async (conversationId: string) => {
