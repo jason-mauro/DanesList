@@ -52,10 +52,6 @@ export const ViewReport: React.FC = () => {
     try {
       
       await axios.post(`${import.meta.env.VITE_API_URL}/listings/delete`, report?.listingData, {withCredentials: true});
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/reports/${id}`,
-        { withCredentials: true }
-      );
       setShowDeleteConfirm(false);
       setShowDeleteSuccess(true);
     } catch (error: any){

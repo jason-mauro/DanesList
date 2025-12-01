@@ -7,6 +7,7 @@ import { ListingImage } from "../models/listingImage.model.js"
 import { CategoryInputSchema } from "../schemas/category.schema.js";
 import { ListingCategory } from "../models/listingCategory.model.js";
 import { ListingFavorites } from "../models/listingFavorite.model.js";
+import { ListingReport } from "../models/listingReport.model.js";
 const sortAttributeMap: Record<string, Record<string, 1 | -1>> = {
     newest:   { createdAt: -1 },
     oldest:   { createdAt: 1 },
@@ -146,6 +147,7 @@ export const deleteListing = async (req: Request, res: Response) => {
     await ListingImage.deleteMany({listingID});
     await ListingCategory.deleteMany({listingID});
     await ListingFavorites.deleteMany({listingID});
+    await ListingReport.deleteMany({listingID});
 
     return res.status(200).json({message: "Deleted successfully"})
   } catch (error: any){
