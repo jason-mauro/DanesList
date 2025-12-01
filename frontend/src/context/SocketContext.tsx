@@ -47,11 +47,41 @@ export const useSocketContext = () => useContext(SocketContext);
 export const SocketContextProvider = ({ children }: { children: ReactNode }) => {
     const [socket, setSocket] = useState<AppSocket | null>(null);
     const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+    const [authUser, setAuthUser] = useState<string | null>(
+        localStorage.getItem("userId")
+    );
 
-    const authUser = localStorage.getItem("userId");
+    // Listen for storage changes (when user logs in/out)
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setAuthUser(localStorage.getItem("userId"));
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+        
+        // Also check localStorage periodically or use a custom event
+        const interval = setInterval(() => {
+            const currentUserId = localStorage.getItem("userId");
+            if (currentUserId !== authUser) {
+                setAuthUser(currentUserId);
+            }
+        }, 1000);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+            clearInterval(interval);
+        };
+    }, [authUser]);
 
     useEffect(() => {
-        if (!authUser || !window.io) return;
+        if (!authUser || !window.io) {
+            // Disconnect socket if user logs out
+            if (socket) {
+                socket.disconnect();
+                setSocket(null);
+            }
+            return;
+        }
 
         const newSocket = window.io("http://localhost:9000", {
             query: { userId: authUser },
@@ -63,7 +93,7 @@ export const SocketContextProvider = ({ children }: { children: ReactNode }) => 
         newSocket.on("getOnlineUsers", (users: string[]) => setOnlineUsers(users));
 
         return () => newSocket.disconnect();
-    }, [authUser]);
+    }, [authUser]); // Now this will properly react to authUser changes
 
     return (
         <SocketContext.Provider value={{ socket, onlineUsers }}>

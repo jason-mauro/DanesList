@@ -27,6 +27,7 @@ export const getReceiverSocketId = (userId: string): string | undefined => {
     return userSocketMap[userId];
 };
 
+
 export const setupSocket = (server: http.Server) => {
     const io = new Server<
         ClientToServerEvents,
@@ -35,7 +36,7 @@ export const setupSocket = (server: http.Server) => {
         SocketData
     >(server, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: ["http://localhost:5173", "http://127.0.0.1:5173", "http://0.0.0.0:5173"],
             credentials: true,
         },
     });
