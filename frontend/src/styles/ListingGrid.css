@@ -8,6 +8,22 @@
   box-sizing: border-box;
 }
 
+/* ----- IMAGE WRAPPER ----- */
+.listing-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;          /* Set a fixed height for all images */
+  overflow: hidden;       /* Ensure excess image is cropped */
+  border-radius: 8px;     /* Optional: rounded corners */
+}
+
+.listing-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* Cover the container without stretching */
+  display: block;
+}
+
 /* ----- CARD ----- */
 .listing-card {
   background: white;
@@ -16,6 +32,13 @@
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.15s ease;
+}
+
+.dl-card-image {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
 }
 
 .listing-card:hover {

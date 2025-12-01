@@ -29,6 +29,38 @@ export const signup = async (userData: {
   localStorage.setItem("userId", data._id);
   localStorage.setItem("username", data.username)
   localStorage.setItem("user_avatar", data.avatar);
+  localStorage.setItem("isAdmin", "false");
+
+  return data; // user info, but no token
+};
+
+export const AdminSignup = async (userData: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+  confirmPassword?: string;
+}) => {
+
+  const response = await fetch(`${API_BASE_URL}/auth/adminSignup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',     // send/receive cookies
+    body: JSON.stringify(userData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Signup failed');
+  }
+
+  localStorage.setItem("userId", data._id);
+  localStorage.setItem("username", data.username)
+  localStorage.setItem("user_avatar", data.avatar);
 
   return data; // user info, but no token
 };

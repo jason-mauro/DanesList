@@ -13,7 +13,8 @@ export const BaseUserSchema = z.object({
         message: "Invalid roleID (must be a valid ObjectId)",
       })
       .optional(),
-      avatar: z.string().nullish()
+      avatar: z.string().nullish(),
+      isAdmin: z.boolean().default(false)
   });
 
 export const UserInputSchema = BaseUserSchema.omit({ roleID: true, avatar: true }).extend({
@@ -29,7 +30,6 @@ export const UserDBSchema = BaseUserSchema.omit({ password: true, roleID: true }
     updatedAt: z.date().optional(),
 });
 
-
 export const UserLoginSchema = z.object({
   email: z.email("Invalid email"),
   password: z.string("Password required")
@@ -37,7 +37,6 @@ export const UserLoginSchema = z.object({
 
 
 export type User = z.infer<typeof UserDBSchema>;
-
 export const SignupSchema = z
   .object({
     firstName: z.string().min(1, "First name is required"),
@@ -58,8 +57,6 @@ export const SignupSchema = z
     password: data.password,
     username: data.username,
   }))
-  
-  // Ensures final transformed data matches the validated UserInput schema
   .pipe(UserInputSchema);
 
 

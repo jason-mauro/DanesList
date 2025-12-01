@@ -2,9 +2,16 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import "../styles/Signup.css";
-import { signup } from "../utils/api";
+import { signup, AdminSignup } from "../utils/api";
 
-const SignupScreen = () => {
+
+interface SignupProps {
+  isAdmin?: boolean;
+}
+
+
+
+const SignupScreen = ({isAdmin = false}: SignupProps) => {
   const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
@@ -48,7 +55,12 @@ const SignupScreen = () => {
     setError("");
 
     try {
-      const response = await signup(formData);
+      let response;
+      if (isAdmin){
+        response = await AdminSignup(formData);
+      } else {
+        response = await signup(formData);
+      }
       console.log("Signup successful:", response);
       
       // Store user data if needed

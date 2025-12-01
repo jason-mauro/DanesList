@@ -5,6 +5,8 @@ import DanesListLogoSmall from "../assets/logos/DaneListSmallLogo.png";
 import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
 import { useConversation } from "../context/ConversationContext";
+import { useAuth } from "../hooks/useAuth";
+import LoadingSpinner from "./LoadingSpinner";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -13,8 +15,8 @@ type SidebarProps = {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const navigate = useNavigate();
+  const {loading , isAdmin} = useAuth();
   const {unreadCount} = useConversation();
-
   const handleSignOut = async () => {
     try {
       // Call logout API to clear token from localStorage
@@ -64,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                 />
             </div>
         </Link>
-
+      {loading ? <LoadingSpinner size="small"/> : 
       <nav className="dl-sidebar-nav">
         <Link to="/createListing" className="sidebar-link">
             <div className="dl-tooltip">
@@ -121,6 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             <span className="dl-tooltip-text">Messages</span>
             </div>
         </Link>
+        
 
         <Link to="/account" className="sidebar-link">
             <div className="dl-tooltip">
@@ -133,7 +136,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             <span className="dl-tooltip-text">Account</span>
             </div>
         </Link>
+        {isAdmin && <Link to="/reports" className="sidebar-link">
+            <div className="dl-tooltip">
+            <button className="dl-nav-item">
+                <span className="dl-nav-icon">⚠️</span>
+                <div className="dl-nav-text dl-nav-text-row">
+                <div>
+                    <span className="dl-nav-title">Reports</span>
+                </div>
+                <span className="dl-nav-dot" />
+                </div>
+            </button>
+            <span className="dl-tooltip-text">Messages</span>
+            </div>
+        </Link>
+        }
         </nav>
+      }
 
 
       

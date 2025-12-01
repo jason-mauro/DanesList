@@ -5,6 +5,49 @@ import { User } from "../models/user.model.js";
 import { SignupSchema, UserLoginSchema } from "../schemas/user.schema.js";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 
+
+export const createAdmin = async (req: Request, res: Response) => {
+    try {
+
+        const userData = SignupSchema.parse(req.body);
+
+        const existingUser = await User.findOne({
+            $or: [
+                { username: userData.username },
+                { email: userData.email },
+            ],
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ error: "Username or email already exists" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(userData.password, salt);
+
+        userData.password = hashedPassword;
+
+        userData.isAdmin = true;
+
+        const newAdmin = new User(userData);
+        await newAdmin.save();
+
+        res.status(201).json({
+            message: "Admin created successfully",
+            _id: newAdmin._id,
+            fullName: newAdmin.firstName + " " + newAdmin.lastName,
+            username: newAdmin.username,
+            email: newAdmin.email,
+            avatar: newAdmin.avatar,
+            isAdmin: newAdmin.isAdmin
+        });
+    } catch (error: any) {
+        console.log("Error in createAdmin controller:", error);
+        res.status(500).json({ error: "Internal Server Error: " + error.message });
+    }
+};
+
+
 export const signup = async (req: Request, res: Response) => {
     try{
         const userData = SignupSchema.parse(req.body);
@@ -36,7 +79,8 @@ export const signup = async (req: Request, res: Response) => {
             fullName: newUser.firstName + " " + newUser.lastName,
             username: newUser.username,
             email: newUser.email,
-            avatar: newUser.avatar
+            avatar: newUser.avatar,
+            isAdmin: String(newUser.isAdmin)
         })
 
     } catch (error: any){
@@ -66,7 +110,8 @@ export const login = async (req: Request, res: Response) => {
             fullName: user.firstName + " " + user.lastName,
             username: user.username,
             email: user.email,
-            avatar: user.avatar
+            avatar: user.avatar,
+            isAdmin: String(user.isAdmin)
         })
 
     } catch (error: any) {

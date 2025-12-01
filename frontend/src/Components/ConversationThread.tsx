@@ -21,6 +21,13 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
   const navigate = useNavigate();
   const {messages, setMessages, setSelectedConversation, selectedConversation} = useConversation();
   const [messageContent, setMessageContent] = useState("");
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "instant" });
+    }
+  }, [messages]);
 
   const sendMessage = async() => {
       try {
@@ -69,11 +76,23 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
                 {msg.message}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="thread-input-row">
-            <input className="thread-input" placeholder="Type a message..." onChange={(e) => setMessageContent(e.target.value)} value={messageContent}/>
-            <button className="thread-send" onClick={sendMessage}>Send</button>
+          <input
+              className="thread-input"
+              placeholder="Type a message..."
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
+            />
+            <button className="thread-send" onClick={sendMessage} >Send</button>
           </div> 
           </>: <div className="no-selection">
         Select a conversation to view
