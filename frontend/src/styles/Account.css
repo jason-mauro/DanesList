@@ -1,5 +1,9 @@
 .account-main {
   padding: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
 }
 
 .account-title {
@@ -10,10 +14,11 @@
 
 .account-card {
   background: white;
-  padding: 24px;
-  border-radius: 12px;
+  padding: 2rem;
+  border-radius: 1rem;
   box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-  max-width: 600px;
+  max-width: 400px;
+  width: 100%;
 }
 
 .account-header {
@@ -31,19 +36,57 @@
 }
 
 .account-buttons {
-  display: flex;
-  gap: 12px;
+  margin-top: 1.5rem;
 }
-
 .account-btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #111827;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1a1a1a;
   color: white;
   border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .account-btn:hover {
   background: black;
+}
+
+.account-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.account-field label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.account-field input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.account-field {
+  position: relative;
+}
+
+.account-field input {
+  padding-right: 2.5rem !important; /* ensure text doesn't collide with icon */
+}
+
+.upload-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.upload-btn:hover {
+  background-color: #333;
 }

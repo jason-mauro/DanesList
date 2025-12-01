@@ -13,6 +13,7 @@ import { MyAccount } from './Pages/Account';
 import ProtectedRoute from './Components/ProtectedRoute';
 import { ConversationProvider } from './context/ConversationContext';
 import { NewMessage } from './Pages/NewMessage';
+import { MainLayout } from './layouts/MainLayout';
 import { SocketContextProvider } from './context/SocketContext';
 import { Reports } from './Pages/Reports';
 import { ViewReport } from './Pages/ViewReport';
