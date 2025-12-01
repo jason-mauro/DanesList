@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import "../styles/Login.css";
 import DanesListLogo from "../assets/logos/DaneListLargeLogo.png";
 import { login } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 
 const LoginScreen = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const LoginScreen = () => {
   const [validated, setValidated] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const {refreshUser} = useAuth();
 
   const handleHidePassword = () => setHidePassword(!hidePassword);
 
@@ -35,6 +37,8 @@ const LoginScreen = () => {
       
       // Store user data if needed
       localStorage.setItem('user', JSON.stringify(response));
+      await refreshUser();
+    
       
       // Navigate to home page
       navigate('/home');

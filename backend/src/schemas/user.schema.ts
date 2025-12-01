@@ -37,6 +37,7 @@ export const UserLoginSchema = z.object({
 
 
 export type User = z.infer<typeof UserDBSchema>;
+
 export const SignupSchema = z
   .object({
     firstName: z.string().min(1, "First name is required"),

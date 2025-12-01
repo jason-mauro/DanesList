@@ -3,6 +3,7 @@ import type {ReactNode } from "react";
 import type { ConversationData, MessageData } from "../types/messages.types";
 import { useSocketContext } from "./SocketContext"; // Import your socket context
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 type ConversationContextType = {
   selectedConversation: ConversationData | null;
@@ -14,6 +15,7 @@ type ConversationContextType = {
   markConversationAsRead: (conversationId: string) => Promise<void>;
   unreadCount: number;
   setUnreadCount: React.Dispatch<React.SetStateAction<number>>;
+  loading: boolean
 };
 
 const ConversationContext = createContext<ConversationContextType | undefined>(undefined);
@@ -31,8 +33,43 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
     const [messages, setMessages] = useState<MessageData[]>([]);
     const [conversations, setConversations] = useState<ConversationData[]>([]);
     const [unreadCount, setUnreadCount] = useState<number>(0);
+    const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
     
     const { socket } = useSocketContext();
+
+    useEffect(() => {
+        setSelectedConversation(null);
+        setMessages([]);
+        setConversations([]);
+        setUnreadCount(0);
+        setLoading(true);
+      }, [user?._id]);
+
+    useEffect(() => {
+        if (!user?._id) return;
+    
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(
+              `${import.meta.env.VITE_API_URL}/messages/conversations`,
+              { withCredentials: true }
+            );
+    
+            const data = response.data;
+            setConversations(data);
+            const unreadCount = conversations.reduce( (acc, conv) => acc + (conv.unreadCount || 0), 0 ); 
+            setUnreadCount(unreadCount);
+
+          } catch (err) {
+            console.error(err);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchData();
+      }, [user, selectedConversation]);
 
     // Listen for new messages via socket
     useEffect(() => {
@@ -81,23 +118,7 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
         };
     }, [socket, selectedConversation]);
 
-    useEffect(() => {
 
-        const fetchData = async () => {
-          try {
-              const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages/conversations`, {withCredentials: true});
-              const data = response.data;
-              setConversations(data);
-              console.log(data)
-              setUnreadCount(
-                data.reduce((acc: number, e:ConversationData) => acc + e.unreadCount, 0)
-              );
-          } catch (error: any){
-            console.log(error.message);
-          }
-        }
-        fetchData();
-      }, [selectedConversation]);
 
     // Mark conversation as read
     const markConversationAsRead = async (conversationId: string) => {
@@ -138,7 +159,8 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
                 setConversations,
                 markConversationAsRead,
                 unreadCount,
-                setUnreadCount
+                setUnreadCount,
+                loading
             }}
         >
             {children}

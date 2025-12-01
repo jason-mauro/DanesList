@@ -6,8 +6,8 @@ import "../styles/Sidebar.css";
 import { logout } from "../utils/api";
 import defaultAvatar from "../assets/default-avatar.jpg";
 import { useConversation } from "../context/ConversationContext";
-import { useAuth } from "../hooks/useAuth";
 import LoadingSpinner from "./LoadingSpinner";
+import { useAuth } from "../context/AuthContext";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -33,7 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 }, []);
 
   const navigate = useNavigate();
-  const {loading , isAdmin} = useAuth();
+  const {loading , user} = useAuth();
   const {unreadCount} = useConversation();
   const handleSignOut = async () => {
     try {
@@ -142,7 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             <span className="dl-tooltip-text">Account</span>
             </div>
         </Link>
-        {isAdmin && <Link to="/reports" className="sidebar-link">
+        {user?.isAdmin && <Link to="/reports" className="sidebar-link">
             <div className="dl-tooltip">
             <button className="dl-nav-item">
                 <span className="dl-nav-icon">⚠️</span>

@@ -13,17 +13,20 @@ import { MyAccount } from './Pages/Account';
 import ProtectedRoute from './Components/ProtectedRoute';
 import { ConversationProvider } from './context/ConversationContext';
 import { NewMessage } from './Pages/NewMessage';
-import { MainLayout } from './layouts/MainLayout';
 import { SocketContextProvider } from './context/SocketContext';
 import { Reports } from './Pages/Reports';
 import { ViewReport } from './Pages/ViewReport';
+import { useAuth } from './hooks/useAuth';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
 
+  const {user} = useAuth();
   return (
     <>
+    <AuthProvider>
       <SocketContextProvider>
-        <ConversationProvider>
+        <ConversationProvider key={user?._id}>
           <BrowserRouter>
             <Routes>
               {/* Public Routes */}
@@ -133,6 +136,7 @@ function App() {
           </BrowserRouter>
         </ConversationProvider>
       </SocketContextProvider>
+      </AuthProvider>
     </>
   )
 }

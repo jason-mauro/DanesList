@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import "../styles/Signup.css";
 import { signup, AdminSignup } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 
 
 interface SignupProps {
@@ -18,6 +19,7 @@ const SignupScreen = ({isAdmin = false}: SignupProps) => {
   const [validated, setValidated] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const {refreshUser} = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -65,7 +67,7 @@ const SignupScreen = ({isAdmin = false}: SignupProps) => {
       
       // Store user data if needed
       localStorage.setItem('user', JSON.stringify(response));
-      
+      await refreshUser();
       // Navigate to home page
       navigate('/home');
     } catch (err: any) {
