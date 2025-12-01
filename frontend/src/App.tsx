@@ -14,11 +14,15 @@ import ProtectedRoute from './Components/ProtectedRoute';
 import { ConversationProvider } from './context/ConversationContext';
 import { NewMessage } from './Pages/NewMessage';
 import { MainLayout } from './layouts/MainLayout';
+import { SocketContextProvider } from './context/SocketContext';
+import { Reports } from './Pages/Reports';
+import { ViewReport } from './Pages/ViewReport';
 
 function App() {
 
   return (
     <>
+      <SocketContextProvider>
         <ConversationProvider>
           <BrowserRouter>
             <Routes>
@@ -26,6 +30,7 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/admin/signup" element={<Signup isAdmin={true}/>} />
 
               {/* Protected Routes */}
               <Route
@@ -36,6 +41,23 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              <Route path="/reports"
+              element ={
+                <ProtectedRoute admin={true}>
+                  <Reports />
+                </ProtectedRoute>
+              }
+              />
+
+              <Route path="/reports/:id"
+              element ={
+                <ProtectedRoute admin={true}>
+                  <ViewReport />
+                </ProtectedRoute>
+              }
+              />
+
 
               <Route
                 path="/createListing"
@@ -110,6 +132,7 @@ function App() {
             </Routes>
           </BrowserRouter>
         </ConversationProvider>
+      </SocketContextProvider>
     </>
   )
 }

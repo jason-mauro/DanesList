@@ -3,7 +3,6 @@ import type { User } from "../types/user.type";
 import { useConversation } from "../context/ConversationContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import type { MessageData } from "../types/messages.types";
 
 type ConversationThreadProps = {
   newMessageTo?: User
@@ -22,9 +21,17 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
   const navigate = useNavigate();
   const {messages, setMessages, setSelectedConversation, selectedConversation} = useConversation();
   const [messageContent, setMessageContent] = useState("");
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "instant" });
+    }
+  }, [messages]);
 
   const sendMessage = async() => {
       try {
+        if (messageContent === "") return;
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages/`, {receiverId: selectedConversation ? selectedConversation.otherUser._id : newMessageTo?._id, text: messageContent}, {withCredentials: true});
         const data = response.data;
         const newMessage = data.message;
@@ -41,7 +48,9 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
 
   useEffect(() => {
     const fetchData = async() => {
+      if (!selectedConversation) return;
       try {
+        console.log(`${import.meta.env.VITE_API_URL}/messages/${selectedConversation?.conversationId}/messages`)
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages/${selectedConversation?.conversationId}/messages`, {withCredentials: true});
         const data = response.data;
         setMessages(data);
@@ -67,11 +76,23 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
                 {msg.message}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="thread-input-row">
-            <input className="thread-input" placeholder="Type a message..." onChange={(e) => setMessageContent(e.target.value)} value={messageContent}/>
-            <button className="thread-send" onClick={sendMessage}>Send</button>
+          <input
+              className="thread-input"
+              placeholder="Type a message..."
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
+            />
+            <button className="thread-send" onClick={sendMessage} >Send</button>
           </div> 
           </>: <div className="no-selection">
         Select a conversation to view

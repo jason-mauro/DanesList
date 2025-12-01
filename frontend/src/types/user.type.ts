@@ -7,4 +7,5 @@ export type User = {
     createdAt?: string;
     updatedAt?: string;
     avatar: string;
+    isAdmin?: false;
   };

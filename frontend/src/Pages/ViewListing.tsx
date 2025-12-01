@@ -19,6 +19,9 @@ export const ViewListing: React.FC = () => {
   const [data, setData] = useState<ListingData>();
   const [error, setError] = useState(null);
   const {setSelectedConversation} = useConversation();
+  const [showReportPopup, setShowReportPopup] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [showReportSuccess, setShowReportSuccess] = useState(false);
 
     const handleFavoriteClick = () => {
     // If trying to un-favorite → ask for confirmation
@@ -101,6 +104,30 @@ export const ViewListing: React.FC = () => {
       fetchData();
     }, [id]);
 
+    const submitReport = async () => {
+      if (!reportReason.trim()) {
+        alert("Please provide a reason.");
+        return;
+      }
+    
+      try {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/reports`,
+          { listingID: id, reason: reportReason },
+          { withCredentials: true }
+        );
+        
+    
+        setShowReportPopup(false);
+        setReportReason("");
+        setShowReportSuccess(true);
+        
+      } catch (err) {
+        console.error("Failed to submit report:", err);
+      }
+    };
+    
+
 
   return (
     <div className="dl-layout viewlisting-bg">
@@ -158,6 +185,9 @@ export const ViewListing: React.FC = () => {
 
           {/* BUTTON */}
           <button className="vl-message-btn" onClick={messageSeller}>Message Seller</button>
+          <button className="vl-report-btn" onClick={() => setShowReportPopup(true)}>
+            Report Listing
+          </button>
         </div>
       </div>
       {showConfirm && (
@@ -171,6 +201,54 @@ export const ViewListing: React.FC = () => {
             </div>
         </div>
         )}
+
+    {showReportPopup && (
+      <div className="vl-confirm-overlay">
+        <div className="vl-confirm-box vl-report-box" style={{ width: "400px" }}>
+          <h3>Report This Listing</h3>
+
+          <label style={{ fontWeight: 600 }}>Reason</label>
+          <textarea
+            className="vl-input"
+            placeholder="Describe the issue…"
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            style={{
+              width: "100%",
+              minHeight: "100px",
+              padding: "10px",
+              resize: "vertical",
+            }}
+          />
+
+          <div className="vl-confirm-buttons">
+            <button className="confirm-yes" onClick={submitReport}>
+              Submit
+            </button>
+            <button className="confirm-no" onClick={() => setShowReportPopup(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+{showReportSuccess && (
+              <div className="vl-confirm-overlay">
+                <div className="vl-confirm-box">
+                  <p><b>Report Submitted</b></p>
+                  <div className="vl-confirm-buttons">
+                    <button 
+                      className="confirm-yes" 
+                      onClick={() => setShowReportSuccess(false)}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
     </main>}
       
     </div>

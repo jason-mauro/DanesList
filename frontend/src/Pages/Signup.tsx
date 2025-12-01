@@ -6,7 +6,13 @@ import {
 } from 'lucide-react';
 import { useMemo } from 'react';
 
-const Signup = () => {
+
+interface SignupProps {
+  isAdmin?: boolean;
+}
+
+
+const Signup = ({isAdmin = false}: SignupProps) => {
   const iconComponents = [
     LampDesk, Armchair, Table, Laptop, Shirt, Camera, Headphones, Gamepad2,
     Calculator, Book, Pencil, Pen, Backpack, Bike, Ticket, Coffee, Keyboard,
@@ -63,7 +69,7 @@ const Signup = () => {
 
       {/* Centered Signup Form */}
       <div className="flex bg-transparent d-flex justify-content-center align-items-center z-1">
-        <SignupScreen />
+        <SignupScreen isAdmin={isAdmin}/>
       </div>
     </div>
     </div>

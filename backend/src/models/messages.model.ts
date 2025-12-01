@@ -16,7 +16,12 @@ const messageSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		// createdAt, updatedAt
+		conversationId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Conversation",
+			required: true
+		},
+		read: { type: Boolean, default: false },
 	},
 	{ timestamps: true, versionKey: false }
 );

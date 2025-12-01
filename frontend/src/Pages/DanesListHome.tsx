@@ -82,7 +82,6 @@ export const DanesListHome: React.FC = () => {
           );
       
           const listings = response.data.listings;
-          console.log(listings)
           const pages = [];
           const total = Math.ceil(listings.length / LISTINGS_PER_PAGE);
       

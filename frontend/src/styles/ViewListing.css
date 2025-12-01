@@ -1,7 +1,7 @@
 /* Page wrapper */
 /* Page wrapper spans full main area */
 .vl-page {
-  padding: 32px 40px;
+  padding: 2px 40px;
   display: flex;
   justify-content: center; /* centers horizontally */
   align-items: flex-start; /* keep content at top */
@@ -72,7 +72,7 @@
   background: #f9fafb;
   padding: 18px 20px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 1px solid #e5e7eb;
 }
 
@@ -382,4 +382,24 @@
 
 .remove-existing-img:hover {
   background: #dc2626;
+}
+
+.vl-report-box textarea {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.vl-report-btn {
+  margin-top: 15px;
+  width: 100%;
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.vl-report-btn:hover {
+  background: #c9302c;
 }

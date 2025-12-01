@@ -7,27 +7,27 @@ import userRouter from "./routes/user.routes.js";
 import dotenv from "dotenv";
 import connectDB from "./db/connectToMongo.js";
 import cookieParser from "cookie-parser";
-import {app, server} from "./socket/socket.js";
+import {setupSocket} from "./socket/socket.js";
+import http from "http";
+import reportRouter from "./routes/reports.routes.js";
 
 dotenv.config();
 
 // const PORT: number = 3000;
 const PORT: number = Number(process.env.PORT) || 7002;
 
+const app = express();
+const server = http.createServer(app);
+
+export const io = setupSocket(server);
+
 // Cors configuration
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
 
 
 // Middleware
@@ -36,9 +36,10 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRouter);
-app.use("/api/listings", listingRouter )
+app.use("/api/listings", listingRouter)
 app.use("/api/messages", messageRouter);
 app.use("/api/user", userRouter);
+app.use("/api/reports", reportRouter);
 
 // Start server
 server.listen(PORT, "0.0.0.0", () => {

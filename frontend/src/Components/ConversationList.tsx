@@ -9,23 +9,22 @@ type ConversationListProps = {
 };
 
 export const ConversationList: React.FC<ConversationListProps> = () => {
-  const {selectedConversation, setSelectedConversation} = useConversation();
-  const [conversations, setConverstaions] = useState<ConversationData[]>([]);
+  const {selectedConversation, setConversations, setSelectedConversation, conversations} = useConversation();
 
-  useEffect(() => {
 
-    const fetchData = async () => {
-      try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages/conversations`, {withCredentials: true});
-          const data = response.data;
-          console.log(data);
-          setConverstaions(data);
-      } catch (error: any){
-        console.log(error.message);
-      }
-    }
-    fetchData();
-  }, []);
+  const openConversation = async (conversation: ConversationData) => {
+    // Mark as read
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages/conversations/${conversation.conversationId}/read`, {}, {withCredentials: true});
+
+    // Clear unread count locally
+    setConversations(prev => prev.map(conv => 
+        conv.conversationId === conversation.conversationId
+            ? { ...conv, unreadCount: 0 }
+            : conv
+    ));
+
+    setSelectedConversation(conversation);
+};
 
   const formatTime = (timestamp: string) => {
     if (!timestamp) return "";
@@ -53,14 +52,24 @@ export const ConversationList: React.FC<ConversationListProps> = () => {
         <div
             key={c.conversationId}
             className={`messages-item ${selectedConversation && selectedConversation.conversationId=== c.conversationId ? "active" : ""}`}
-            onClick={() => setSelectedConversation(c)}
+            onClick={() => openConversation(c)}
             >
             <img className="messages-avatar" src={c.otherUser.avatar} />
             <div className="messages-info">
-                <div className="messages-name">{c.otherUser.username}</div>
-
+            <div className="messages-name">
+              {c.otherUser.username}
+              {c.unreadCount > 0 && (
+                <span 
+                  className={`unread-badge ${c.unreadCount > 99 ? 'max' : ''}`}
+                  data-count={c.unreadCount}
+                >
+                  {c.unreadCount > 99 ? '99+' : c.unreadCount}
+                </span>
+              )}
+            </div>
+          
                 {/* preview as bubble */}
-                <div className="messages-preview-bubble">
+                <div >
                 {c.lastMessage}
                 </div>
             </div>
