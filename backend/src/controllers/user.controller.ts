@@ -2,6 +2,13 @@ import { Request, Response } from "express";
 import { User } from "../models/user.model.js"; // Adjust path to match your setup
 import { UserUpdateSchema } from "../schemas/user.schema.js"; // or wherever you put it
 import bcrypt from "bcryptjs";
+import { Listing } from "../models/listing.model.js";
+import { ListingImage } from "../models/listingImage.model.js";
+import { ListingCategory } from "../models/listingCategory.model.js";
+import { ListingFavorites } from "../models/listingFavorite.model.js";
+import Message from "../models/messages.model.js";
+import Conversation from "../models/conversations.model.js";
+import { ListingReport } from "../models/listingReport.model.js";
 
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -53,3 +60,49 @@ export const updateUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message || "Failed to update user" });
   }
 };
+
+// user/ban/:id
+export const banUser = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id
+
+        if (!req.user?.isAdmin){
+          return res.status(401).json({message: "Not Authorized"})
+        }
+
+        await User.findByIdAndUpdate(
+          id,
+          {
+            isBanned: true
+          }
+        );
+
+        const docs = await Listing.find({ userID: id });
+        await Listing.deleteMany({ userID: id });
+
+        await Promise.all(
+          docs.map(async (d) => {
+            await ListingImage.deleteMany({ listingID: d._id })
+            await ListingCategory.deleteMany({ listingID: d._id });
+            await ListingReport.deleteMany({listingID: d._id});
+          })
+        );
+
+        await Promise.all([
+          ListingFavorites.deleteMany({userID: id}),
+          Message.deleteMany({
+            $or: [
+              { senderID: id },
+              { receiverID: id }
+            ]
+          }),
+          Conversation.deleteMany({
+            participants: id
+          })
+        ]);
+
+        return res.status(200).json({success: "true"});
+    } catch (error: any){
+      res.status(500).json({message: error.message});
+    }
+}

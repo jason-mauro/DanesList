@@ -10,6 +10,7 @@ import type {ListingData} from "../types/listing.types";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../Components/LoadingSpinner";
+import { useAuth } from "../context/AuthContext";
 
 export const DanesListHome: React.FC = () => {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ export const DanesListHome: React.FC = () => {
       fetchData();
       
   }, [searchQuery, selectedCategory, selectedSort])
-
+  const {user} = useAuth();
   return (
     <div className="dl-layout">
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
@@ -129,7 +130,7 @@ export const DanesListHome: React.FC = () => {
             <ListingCard
               key={listing._id}
               listing={listing}
-              onClick={() => navigate(`/listing/${listing._id}`)}
+              onClick={() => user?._id === listing.user._id  ? navigate(`/edit/${listing._id}`) : navigate(`/listing/${listing._id}`)}
             /> 
           )) : <p>No Listings found</p>}
         </section>

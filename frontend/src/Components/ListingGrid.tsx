@@ -3,6 +3,7 @@ import React from "react";
 import "../styles/ListingGrid.css";
 import type {ListingData} from "../types/listing.types";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 type Props = {
   items: ListingData[];
   onClick?: () => void;
@@ -11,13 +12,15 @@ type Props = {
 
 export const ListingGrid: React.FC<Props> = ({ items, myListings }) => {
   const navigate = useNavigate();
+  const {user} = useAuth();
   return (
     <div className="listing-grid">
-      {items.map((item) => (
+      {items.map((item) => {
+        return (
         <div
           key={item._id}
           className="listing-card"
-          onClick={() => myListings ? navigate(`/edit/${item._id}`) : navigate(`/listing/${item._id}`)}
+          onClick={() => myListings || user?._id === item.user._id  ? navigate(`/edit/${item._id}`) : navigate(`/listing/${item._id}`)}
         >
           <div className="listing-img-wrapper">
             <img src={item.images[0]} className="listing-img" />
@@ -29,7 +32,8 @@ export const ListingGrid: React.FC<Props> = ({ items, myListings }) => {
             <p>${item.price}</p>
           </div>
         </div>
-      ))}
+      )
+})}
     </div>
   );
 };

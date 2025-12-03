@@ -59,6 +59,16 @@ export const ViewReport: React.FC = () => {
     }
   }
 
+  const banUser = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/user/ban/${report?.listingData.user._id}`, {}, {withCredentials: true});
+      setShowDeleteConfirm(false);
+      setShowDeleteSuccess(true);
+    } catch (error: any){
+        console.log(error)
+    }
+  }
+
 
   if (loading) return <LoadingSpinner />;
 
@@ -107,12 +117,18 @@ export const ViewReport: React.FC = () => {
                 }}>
                 Delete Report
               </button>
+              <button className="vl-btn-delete" onClick={() => {
+                setDeletingString("ban");
+                setShowDeleteConfirm(true)
+                }}>
+                Ban User
+              </button>
               {showDeleteConfirm && (
         <div className="vl-confirm-overlay">
             <div className="vl-confirm-box">
-            <p>{`Are you sure you want to delete this ${deletingString}`}</p>
+            <p>{deletingString !== "ban" ? `Are you sure you want to delete this ${deletingString}` : "Are you sure you want to ban this user?"}</p>
             <div className="vl-confirm-buttons">
-                <button className="confirm-yes" onClick={deletingString === "Listing" ? deleteListing : deleteReport}>Yes</button>
+                <button className="confirm-yes" onClick={deletingString === "Listing" ? deleteListing : deletingString === "ban" ? banUser : deleteReport}>Yes</button>
                 <button className="confirm-no" onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
             </div>
             </div>

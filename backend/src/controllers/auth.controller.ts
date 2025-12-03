@@ -95,12 +95,17 @@ export const login = async (req: Request, res: Response) => {
         const loginData = UserLoginSchema.parse(req.body);
 
         const user = await User.findOne({email: loginData.email})
+
+        if (user?.isBanned){
+            return res.status(400).json({error: "You have been Banned!"})
+        }
         
         const isPasswordCorrect = await bcrypt.compare(loginData.password, user?.password || "")
 
         if (!user || !isPasswordCorrect){
             return res.status(400).json({error: "Invalid username or password"})
         }
+
 
         generateTokenAndSetCookie(user._id, res);
         console.log("set token")
@@ -144,8 +149,10 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {userId: string};
 
         const user = await User.findById(decoded.userId).select("-password");
-
         if (!user) return res.status(404).json({ message: "User not found" });
+        if (user.isBanned){
+            return res.status(401).json({ message: "Banned user"})
+        }
         console.log("Sucessful authenticated")
         req.user = user;
         next();
