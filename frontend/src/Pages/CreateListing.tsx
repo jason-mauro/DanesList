@@ -99,7 +99,7 @@ export const CreateListing: React.FC = () => {
 
     setToast({ message: "Listing created successfully!", type: "success" });
     setTimeout(() => {
-    navigate(`/listing/${res.data.id}`);
+    navigate(`/edit/${res.data.id}`);
     }, 1000);
 
     // Reset form fields
