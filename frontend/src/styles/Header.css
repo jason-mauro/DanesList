@@ -1,8 +1,8 @@
 /* Header container */
 .dl-header {
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding: 16px 14px;
   background: transparent;
   position: relative;
   z-index: 10;
@@ -10,8 +10,8 @@
 
 /* Keep logo at a fixed size */
 .dl-logo-img {
-  height: 120px;         /* perfect size for your layout */
-  width: 100%;          /* keeps natural aspect ratio */
+  height: 200px;         /* perfect size for your layout */
+  width: auto;          /* keeps natural aspect ratio */
   object-fit: contain;
   display: block;
 }

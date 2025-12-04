@@ -49,7 +49,6 @@ export const Filters: React.FC<FiltersProps> = ({
 
   return (
     <section className="dl-filters">
-      <span className="dl-tags-label">Tags:</span>
 
       <div className="dl-filter-row">
         {/* CATEGORY SELECT */}
