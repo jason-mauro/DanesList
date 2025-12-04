@@ -16,6 +16,8 @@ export const ViewReport: React.FC = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [deletingString, setDeletingString] = useState("");
+  const [error, setError] = useState("");
+  const [showDeleteError, setShowDeleteError] = useState(false);
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -65,7 +67,9 @@ export const ViewReport: React.FC = () => {
       setShowDeleteConfirm(false);
       setShowDeleteSuccess(true);
     } catch (error: any){
-        console.log(error)
+      setShowDeleteConfirm(false);
+      setShowDeleteError(true);
+      setError(error.response.data.message);
     }
   }
 
@@ -153,6 +157,26 @@ export const ViewReport: React.FC = () => {
                 </div>
               </div>
             )}
+
+            {showDeleteError && (
+              <div className="vl-confirm-overlay">
+                <div className="vl-confirm-box">
+                  <p><b>{`Error: ${error}`}</b></p>
+                  <div className="vl-confirm-buttons">
+                    <button 
+                      className="confirm-yes" 
+                      onClick={() => {
+                        setShowDeleteError(false)
+                      }
+                    }
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             </div>
           </div>
         </div>

@@ -70,6 +70,11 @@ export const banUser = async (req: Request, res: Response) => {
           return res.status(401).json({message: "Not Authorized"})
         }
 
+        const user = await User.findById(id);
+        if (user?.isAdmin) {
+          return res.status(401).json({message: "You can not ban other administators"})
+        }
+
         await User.findByIdAndUpdate(
           id,
           {
