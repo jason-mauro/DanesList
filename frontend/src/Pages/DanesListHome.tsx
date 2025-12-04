@@ -109,20 +109,23 @@ export const DanesListHome: React.FC = () => {
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
       
       <main className="dl-main">
+      <div className="dl-content-wrapper">
         <Header />
 
-        <SearchBar 
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-
-        <Filters
-          selectedCategory={selectedCategory}
-          onCategoryChange={handleCategoryChange}
-          selectedSort={selectedSort}
-          onSortChange={handleSortChange}
-          categories={categories}
-        />
+        <div className="dl-top-controls">
+          <SearchBar 
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <Filters
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+            selectedSort={selectedSort}
+            onSortChange={handleSortChange}
+            categories={categories}
+          />
+        </div>
+      </div>
 
         <section className="dl-card-grid">
           
