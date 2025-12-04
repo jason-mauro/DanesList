@@ -70,3 +70,12 @@
   gap: 20px;
   width: 100%;
 }
+
+.loading-spinner-wrapper {
+  grid-column: 1 / -1; /* Make it span the entire grid width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 100%;
+}

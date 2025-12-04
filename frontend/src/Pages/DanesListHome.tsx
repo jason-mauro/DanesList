@@ -128,14 +128,25 @@ export const DanesListHome: React.FC = () => {
       </div>
 
         <section className="dl-card-grid">
-          
-          {loading ? <LoadingSpinner size="small"/> : pageListings[currentPage-1] ? pageListings[currentPage - 1].map((listing) => (
-            <ListingCard
-              key={listing._id}
-              listing={listing}
-              onClick={() => user?._id === listing.user._id  ? navigate(`/edit/${listing._id}`) : navigate(`/listing/${listing._id}`)}
-            /> 
-          )) : <p>No Listings found</p>}
+          {loading ? (
+            <div className="loading-spinner-wrapper">
+              <LoadingSpinner size="small" />
+            </div>
+          ) : pageListings[currentPage - 1] ? (
+            pageListings[currentPage - 1].map((listing) => (
+              <ListingCard
+                key={listing._id}
+                listing={listing}
+                onClick={() =>
+                  user?._id === listing.user._id
+                    ? navigate(`/edit/${listing._id}`)
+                    : navigate(`/listing/${listing._id}`)
+                }
+              />
+            ))
+          ) : (
+            <p>No Listings found</p>
+          )}
         </section>
 
         <Pagination
