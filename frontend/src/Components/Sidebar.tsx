@@ -59,8 +59,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   return (
     <aside className={`dl-sidebar ${isOpen ? "open" : "closed"}`}>
       {/* Hamburger in top-right, NOT wrapped in tooltip */}
-      <button className="dl-sidebar-hamburger" onClick={onToggle}>
-        {isOpen ? "☰" : "✕"}
+      <button className="dl-sidebar-hamburger" onClick={onToggle}> 
+        ☰
       </button>
     
         <Link to="/home" className="sidebar-link">
@@ -163,15 +163,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
 
       
         <div className="dl-sidebar-footer">
-          <img className="dl-avatar" src={currentUser.avatar || defaultAvatar} alt={currentUser.username || "User"} />
-            <div className="dl-avatar-name">{currentUser.username || "User"}</div>
-            <button 
-              onClick={handleSignOut}
-              className="dl-sign-out-btn"
-            >
-              Sign out
-            </button>
-          </div>
+          <img
+            className="dl-avatar" src={currentUser.avatar || defaultAvatar}
+            alt={currentUser.username || "User"}
+          />
+          
+          {isOpen && (
+            <>
+              <div className="dl-avatar-name">{currentUser.username || "User"}</div>
+              <button
+                onClick={handleSignOut}
+                className="dl-sign-out-btn"
+              >
+                Sign out
+              </button>
+            </>
+          )}
+        </div>
     </aside>
   );
 };
