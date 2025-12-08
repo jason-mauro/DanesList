@@ -32,8 +32,6 @@ export const UploadImages: React.FC<UploadImagesProps> = ({
       <div style={{ fontSize: "18px", fontWeight: 600, marginBottom: "6px" }}>
         Upload Images
       </div>
-
-      {/* LIST FILE NAMES */}
       {files.length > 0 ? (
         <div style={{ fontSize: "14px", color: "#555", marginBottom: "10px" }}>
           {files.map((file, index) => (
@@ -68,7 +66,6 @@ export const UploadImages: React.FC<UploadImagesProps> = ({
         </div>
       )}
 
-      {/* BROWSE BUTTON */}
       <button
         onClick={() => fileInputRef.current?.click()}
         style={{

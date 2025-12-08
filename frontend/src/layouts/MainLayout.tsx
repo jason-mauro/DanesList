@@ -8,7 +8,6 @@ export const MainLayout: React.FC = () => {
     return stored ? JSON.parse(stored) : {};
   });
 
-  // Refresh user info on route change (like after account update)
   const location = useLocation();
   useEffect(() => {
     const latest = localStorage.getItem("user");

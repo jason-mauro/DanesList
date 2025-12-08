@@ -1,5 +1,4 @@
 import LoginScreen from "../Components/LoginForm"
-//import DanesListLogo from "../assets/logos/DaneListLargeLogo.png";
 import { LampDesk, Armchair, Table, Laptop, Shirt, Camera, Headphones, Gamepad2, Calculator, Book, Pencil, Pen, Backpack, Bike, Ticket, Coffee, Keyboard, Guitar, Volleyball, ShoppingBasket, Phone, PcCase, Microwave } from 'lucide-react'
 import {useMemo} from 'react';
 
@@ -7,7 +6,6 @@ const Login  = () => {
 
     const iconComponents = [LampDesk, Armchair, Table, Laptop, Shirt, Camera, Headphones, Gamepad2, Calculator, Book, Pencil, Pen, Backpack, Bike, Ticket, Coffee, Keyboard, Guitar, Volleyball, ShoppingBasket, Phone, PcCase, Microwave];
 
-      // Generate grid of icons
       const backgroundIcons = useMemo(() => {
         const icons = [];
         const rows = 10;
@@ -33,8 +31,6 @@ const Login  = () => {
     <>
         <div className="bg-white relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 overflow-hidden">
         <div className="position-relative min-vh-100 d-flex align-items-center justify-content-center bg-gradient overflow-hidden" >
-      
-      {/* Background Icons Grid */}
       <div className="position-absolute top-0 start-0 w-100 h-100 p-4 z-0">
         <div className="container-fluid h-100">
           {backgroundIcons.map((row, rowIndex) => (

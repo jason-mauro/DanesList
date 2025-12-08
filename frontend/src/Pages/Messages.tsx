@@ -21,14 +21,10 @@ export const Messages: React.FC = () => {
       
       <main className="dl-main messages-main">
         <div className="messages-container">
-
-          {/* LEFT COLUMN — LIST */}
           <ConversationList
             selected={selectedConversation}
             onSelect={setSelectedConversation}
           />
-
-          {/* RIGHT COLUMN — THREAD */}
           <ConversationThread  />
 
         </div>

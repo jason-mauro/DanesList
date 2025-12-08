@@ -1,16 +1,13 @@
-/* Page wrapper */
-/* Page wrapper spans full main area */
 .vl-page {
   padding: 2px 40px;
   display: flex;
-  justify-content: center; /* centers horizontally */
-  align-items: flex-start; /* keep content at top */
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
   box-sizing: border-box;
   padding-top: 80px;
 }
 
-/* Main form-like container */
 .vl-container {
   width: 100%;
   max-width: 800px;
@@ -20,26 +17,22 @@
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
 
-/* Listing image */
-
 .vl-image {
   width: 100%;
   height: 100%;
-  max-width: 600px; /* same as wrapper */
-  max-height: 400px; /* same as wrapper */
-  object-fit: contain; /* scales image to fit while maintaining aspect ratio */
+  max-width: 600px;
+  max-height: 400px;
+  object-fit: contain;
   display: block;
-  margin: 0 auto; /* centers the image horizontally */
+  margin: 0 auto;
 }
 
-/* Title */
 .vl-title {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 10px;
 }
 
-/* Tags */
 .vl-tags {
   display: flex;
   gap: 8px;
@@ -55,20 +48,17 @@
   font-weight: 500;
 }
 
-/* Price */
 .vl-price {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 6px;
 }
 
-/* Status */
 .vl-status-label {
   color: #6b7280;
   margin-bottom: 20px;
 }
 
-/* Section cards */
 .vl-section {
   background: #f9fafb;
   padding: 18px 20px;
@@ -83,7 +73,6 @@
   font-weight: 700;
 }
 
-/* Seller row */
 .vl-seller-row {
   display: flex;
   align-items: center;
@@ -94,14 +83,13 @@
   width: 40px;
   height: 40px;
   object-fit: cover;
-  border-radius: 50%; /* Optional: makes it circular */
+  border-radius: 50%;
 }
 
 .vl-seller-name {
   font-weight: 600;
 }
 
-/* Action button */
 .vl-message-btn {
   width: 100%;
   padding: 12px;
@@ -117,14 +105,12 @@
   background-color: #000;
 }
 
-/* Confirmation page button row */
 .vl-confirm-buttons {
   display: flex;
   gap: 12px;
   margin-top: 20px;
 }
 
-/* Modify Listing */
 .vl-btn-edit {
   background: #111827;
   color: white;
@@ -134,7 +120,6 @@
   cursor: pointer;
 }
 
-/* Mark Sold */
 .vl-btn-sold {
   background: #4b5563;
   color: white;
@@ -144,7 +129,6 @@
   cursor: pointer;
 }
 
-/* Delete Listing */
 .vl-btn-delete {
   background: #dc2626;
   color: white;
@@ -154,20 +138,18 @@
   cursor: pointer;
 }
 
-/* Wrapper allows overlay positioning */
 .vl-image-wrapper {
   position: relative;
   width: 100%;
-  max-width: 600px; /* adjust this to your desired max width */
-  max-height: 400px; /* adjust this to your desired max height */
+  max-width: 600px; 
+  max-height: 400px; 
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; /* centers the wrapper horizontally */
+  margin: 0 auto; 
   overflow: hidden;
 }
 
-/* SOLD banner */
 .vl-sold-banner {
   position: absolute;
   top: 16px;
@@ -183,12 +165,10 @@
   text-transform: uppercase;
 }
 
-/* Optional: fade image when sold */
 .vl-image-wrapper.sold img {
   opacity: 0.6;
 }
 
-/* Favorite heart button */
 .vl-fav-btn {
   position: absolute;
   top: 16px;
@@ -207,21 +187,19 @@
   cursor: pointer;
   z-index: 20;
   transition: transform 0.15s ease, background 0.2s ease;
-  font-size: 24px; /* controls heart size */
-  line-height: 1;  /* prevents weird vertical alignment */
+  font-size: 24px; 
+  line-height: 1;
   padding: 0;
   padding-top: 1px;
   padding-left: 2px;
 }
 
-/* When favorited */
 .vl-fav-btn.favorited {
-  background: #dc2626 !important; /* red bubble */
+  background: #dc2626 !important;
   color: white !important;
   border-color: #dc2626 !important;
 }
 
-/* When NOT favorited */
 .vl-fav-btn.not-favorited {
   background: rgba(255, 255, 255, 0.9);
   color: black;
@@ -235,10 +213,9 @@
 
 .vl-fav-btn span {
   display: inline-block;
-  transform: translateY(-2px); /* adjust until it looks visually centered */
+  transform: translateY(-2px);
 }
 
-/* Darkened fullscreen overlay */
 .vl-confirm-overlay {
   position: fixed;
   top: 0;
@@ -252,10 +229,9 @@
   justify-content: center;
   align-items: center;
 
-  z-index: 99999; /* above everything */
+  z-index: 99999;
 }
 
-/* Pop-up box */
 .vl-confirm-box {
   background: white;
   padding: 24px 28px;
@@ -287,7 +263,6 @@
   cursor: pointer;
 }
 
-/* Edit Popup Styles */
 .edit-popup-box {
   background: white;
   border-radius: 12px;
@@ -418,7 +393,7 @@
 }
 
 .vl-back-btn.sidebar-open {
-  left: 300px; /* Adjust based on actual sidebar width */
+  left: 300px;
 }
 
 .vl-back-btn.sidebar-closed {

@@ -1,4 +1,3 @@
-// src/Pages/ViewReport.tsx
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import { useParams, useNavigate } from "react-router-dom";

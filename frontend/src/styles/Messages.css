@@ -1,4 +1,3 @@
-/* MAIN container layout */
 .messages-container {
   display: flex;
   height: 100%;
@@ -8,7 +7,6 @@
   overflow: hidden;
 }
 
-/* LEFT COLUMN */
 .messages-list {
   width: 360px;
   border-right: 1px solid #e5e7eb;
@@ -16,7 +14,6 @@
   overflow-y: auto;
 }
 
-/* Update your unread badge styles */
 .unread-badge {
   display: inline-flex;
   align-items: center;
@@ -35,7 +32,6 @@
   animation: badge-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Animation when badge appears */
 @keyframes badge-appear {
   0% {
     transform: scale(0);
@@ -50,10 +46,6 @@
   }
 }
 
-
-
-
-/* Better positioning in conversation list */
 .messages-name {
   font-weight: 600;
   margin-bottom: 2px;
@@ -62,7 +54,6 @@
   gap: 6px;
 }
 
-/* Handle double-digit numbers better */
 .unread-badge {
   min-width: 20px;
 }
@@ -73,7 +64,6 @@
   font-size: 10px;
 }
 
-/* 99+ style */
 .unread-badge.max {
   min-width: 26px;
   padding: 0 6px;
@@ -90,7 +80,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;   /* fills available space */
+  height: 100%; 
   font-size: 1.2rem;
   color: #777;
 }
@@ -135,7 +125,6 @@
   color: #6b7280;
 }
 
-/* RIGHT COLUMN */
 .messages-thread {
   flex: 1;
   padding: 24px;
@@ -151,7 +140,6 @@
   font-size: 22px;
 }
 
-/* THREAD MESSAGES */
 .thread-name {
   font-size: 20px;
   font-weight: 600;
@@ -176,7 +164,6 @@
   color: #111827;
 }
 
-/* INPUT ROW */
 .thread-input-row {
   display: flex;
   gap: 10px;
@@ -199,7 +186,6 @@
   cursor: pointer;
 }
 
-/* ---- Clear old bubble style ---- */
 .message-bubble {
   max-width: 70%;
   padding: 10px 14px;
@@ -210,7 +196,6 @@
   display: inline-block;
 }
 
-/* Incoming LEFT */
 .message-bubble.other {
   align-self: flex-start;
   background: #e5e5ea;
@@ -221,7 +206,6 @@
   border-bottom-right-radius: 18px;
 }
 
-/* My messages RIGHT */
 .message-bubble.me {
   align-self: flex-end;
   background: #0a84ff;
@@ -232,8 +216,6 @@
   border-bottom-left-radius: 18px;
 }
 
-
-/* ---- Conversation Preview Bubble in List ---- */
 .messages-preview-bubble {
   background: #f3f4f6;
   padding: 4px 10px;
@@ -252,20 +234,16 @@
   color: #4c1d95;
 }
 
-/* FINAL clean bubble behavior — paste at the BOTTOM of Messages.css */
-
-/* Container for messages */
 .thread-messages {
   flex: 1;
   overflow-y: auto;
   padding-right: 10px;
 
   display: flex;
-  flex-direction: column;   /* STACK bubbles vertically */
-  gap: 10px;                /* space between bubbles */
+  flex-direction: column;   
+  gap: 10px;               
 }
 
-/* Base bubble */
 .message-bubble {
   max-width: 70%;
   padding: 10px 14px;
@@ -274,11 +252,10 @@
   line-height: 1.35;
 
   display: inline-block;
-  word-wrap: break-word;        /* allow line breaks */
-  white-space: pre-wrap;        /* preserve spacing, wrap text */
+  word-wrap: break-word;      
+  white-space: pre-wrap;       
 }
 
-/* OTHER PERSON → LEFT */
 .message-bubble.other {
   align-self: flex-start;
   background: #e5e5ea;
@@ -290,7 +267,6 @@
   border-bottom-right-radius: 18px;
 }
 
-/* ME → RIGHT */
 .message-bubble.me {
   align-self: flex-end;
   background: #0a84ff;

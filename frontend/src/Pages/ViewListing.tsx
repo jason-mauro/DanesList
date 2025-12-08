@@ -24,7 +24,6 @@ export const ViewListing: React.FC = () => {
   const [showReportSuccess, setShowReportSuccess] = useState(false);
 
     const handleFavoriteClick = () => {
-    // If trying to un-favorite → ask for confirmation
     if (isFavorite) {
         setShowConfirm(true);
     } else {
@@ -32,11 +31,8 @@ export const ViewListing: React.FC = () => {
     }
     };
 
-    
-    //Backend logic maybe?
     const addFavorite = async () => {
     try {
-        // Replace with your backend endpoint
         await axios.post(
           `${import.meta.env.VITE_API_URL}/listings/favorite/${id}`, {},
           { withCredentials: true }
@@ -50,7 +46,6 @@ export const ViewListing: React.FC = () => {
 
     const removeFavorite = async () => {
       try {
-          // Replace with your backend endpoint
           await axios.post(
           `${import.meta.env.VITE_API_URL}/listings/favorite/${id}`, {} ,
           { withCredentials: true }
@@ -134,21 +129,15 @@ export const ViewListing: React.FC = () => {
       <main className="dl-main">
         <button className={`vl-back-btn ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`} onClick={() => navigate(-1)}>  ← Back </button>
       <div className="vl-page">
-        {/* FORM CONTAINER */}
         <div className="vl-container">
           <div className="vl-image-wrapper">
           <img src={data.images[0]} alt={data.title} className="vl-image" />
-            {/* FAVORITE BUTTON */}
             <button className="vl-fav-btn" onClick={handleFavoriteClick}>
             <span>{isFavorite ? "❤️" : "🤍"}</span>
             </button>
           </div>
 
-
-          {/* TITLE */}
           <h1 className="vl-title">{data.title}</h1>
-
-          {/* TAGS */}
           <div className="vl-tags">
             {data.categories.map((tag, i) => (
               <span key={i} className="vl-tag">
@@ -156,19 +145,13 @@ export const ViewListing: React.FC = () => {
               </span>
             ))}
           </div>
-
-          {/* PRICE */}
           <div className="vl-price">${data.price}</div>
 
           <p className="vl-status-label">Listing Status : {data.isSold ? "sold": "available"}</p>
-
-          {/* DESCRIPTION */}
           <div className="vl-section">
             <h2>Description</h2>
             <p>{data.description}</p>
           </div>
-
-          {/* SELLER INFO */}
           <div className="vl-section">
             <h2>Seller Information</h2>
 
@@ -179,8 +162,6 @@ export const ViewListing: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* BUTTON */}
           <button className="vl-message-btn" onClick={messageSeller}>Message Seller</button>
           <button className="vl-report-btn" onClick={() => setShowReportPopup(true)}>
             Report Listing

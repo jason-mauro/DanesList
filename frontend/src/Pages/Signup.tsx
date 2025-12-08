@@ -44,7 +44,6 @@ const Signup = ({isAdmin = false}: SignupProps) => {
     <div className="bg-white relative min-h-screen flex items-center justify-center overflow-hidden">
     <div className="position-relative min-vh-100 d-flex align-items-center justify-content-center bg-gradient overflow-hidden" >
       
-      {/* Background Icons */}
       <div className="position-absolute top-0 start-0 w-100 h-100 p-4 z-0">
         <div className="container-fluid h-100">
           {backgroundIcons.map((row, rowIndex) => (
@@ -67,7 +66,6 @@ const Signup = ({isAdmin = false}: SignupProps) => {
         </div>
       </div>
 
-      {/* Centered Signup Form */}
       <div className="flex bg-transparent d-flex justify-content-center align-items-center z-1">
         <SignupScreen isAdmin={isAdmin}/>
       </div>

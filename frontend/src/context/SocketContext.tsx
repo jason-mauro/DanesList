@@ -8,11 +8,6 @@ import React, {
 import type { ReactNode } from "react";
 import { useConversation } from "./ConversationContext";
 
-// Remove the socket.io-client import completely
-// Add this script tag to your index.html instead:
-// <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-
-// Then use the global Socket object
 declare global {
     interface Window {
         io: any;
@@ -30,7 +25,7 @@ interface ServerToClientEvents {
     getOnlineUsers: (users: string[]) => void;
 }
 
-type AppSocket = any; // Use 'any' for now with CDN version
+type AppSocket = any;
 
 interface SocketContextValue {
     socket: AppSocket | null;
@@ -51,7 +46,6 @@ export const SocketContextProvider = ({ children }: { children: ReactNode }) => 
         localStorage.getItem("userId")
     );
 
-    // Listen for storage changes (when user logs in/out)
     useEffect(() => {
         const handleStorageChange = () => {
             setAuthUser(localStorage.getItem("userId"));
@@ -59,7 +53,6 @@ export const SocketContextProvider = ({ children }: { children: ReactNode }) => 
 
         window.addEventListener("storage", handleStorageChange);
         
-        // Also check localStorage periodically or use a custom event
         const interval = setInterval(() => {
             const currentUserId = localStorage.getItem("userId");
             if (currentUserId !== authUser) {
@@ -75,7 +68,6 @@ export const SocketContextProvider = ({ children }: { children: ReactNode }) => 
 
     useEffect(() => {
         if (!authUser || !window.io) {
-            // Disconnect socket if user logs out
             if (socket) {
                 socket.disconnect();
                 setSocket(null);
@@ -93,8 +85,7 @@ export const SocketContextProvider = ({ children }: { children: ReactNode }) => 
         newSocket.on("getOnlineUsers", (users: string[]) => setOnlineUsers(users));
 
         return () => newSocket.disconnect();
-    }, [authUser]); // Now this will properly react to authUser changes
-
+    }, [authUser]);
     return (
         <SocketContext.Provider value={{ socket, onlineUsers }}>
             {children}

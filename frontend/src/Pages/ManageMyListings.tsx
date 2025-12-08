@@ -35,8 +35,6 @@ export const ManageMyListings: React.FC = () => {
       {loading ? <LoadingSpinner size="small"/> : 
       <main className="dl-main ml-main">
         <h1 className="ml-title">My Listings</h1>
-
-        {/* Match Favorites layout */}
         <ListingGrid items={listings} myListings={true} />
       </main>
     }

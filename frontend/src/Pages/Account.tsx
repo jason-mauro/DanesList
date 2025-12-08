@@ -43,7 +43,6 @@ export const MyAccount: React.FC = () => {
   try {
     const updateData: any = {};
 
-    // Add only changed fields
     if (username && username !== storedUser.username) updateData.username = username;
     if (email && email !== storedUser.email) updateData.email = email;
     if (password && password.trim() !== "") updateData.password = password;
@@ -66,17 +65,16 @@ export const MyAccount: React.FC = () => {
       { withCredentials: true }
     );
 
-    // Optionally update localStorage
     const updatedUser = {
       ...storedUser,
       ...updateData,
     };
     localStorage.setItem("user", JSON.stringify(updatedUser));
-    window.dispatchEvent(new Event("storage")); // Notify other tabs
-    window.dispatchEvent(new Event("sidebarUpdate")); // Notify sidebar to refresh
+    window.dispatchEvent(new Event("storage")); 
+    window.dispatchEvent(new Event("sidebarUpdate")); 
 
     setToast({ message: "Profile updated successfully!", type: "success" });
-    setPassword(""); // Clear password field after successful update
+    setPassword(""); 
 
   } catch (error) {
     console.error(error);

@@ -13,10 +13,8 @@ export const ConversationList: React.FC<ConversationListProps> = () => {
 
 
   const openConversation = async (conversation: ConversationData) => {
-    // Mark as read
     const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages/conversations/${conversation.conversationId}/read`, {}, {withCredentials: true});
 
-    // Clear unread count locally
     setConversations(prev => prev.map(conv => 
         conv.conversationId === conversation.conversationId
             ? { ...conv, unreadCount: 0 }
@@ -33,13 +31,10 @@ export const ConversationList: React.FC<ConversationListProps> = () => {
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      // Show time if today
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else if (diffInHours < 48) {
-      // Show "Yesterday" if yesterday
       return "Yesterday";
     } else {
-      // Show date if older
       return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
   };
@@ -67,8 +62,6 @@ export const ConversationList: React.FC<ConversationListProps> = () => {
                 </span>
               )}
             </div>
-          
-                {/* preview as bubble */}
                 <div >
                 {c.lastMessage}
                 </div>

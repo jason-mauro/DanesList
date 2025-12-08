@@ -1,7 +1,5 @@
-// src/utils/api.ts
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-// SIGNUP
 export const signup = async (userData: {
   firstName: string;
   lastName: string;
@@ -16,7 +14,7 @@ export const signup = async (userData: {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',     // send/receive cookies
+    credentials: 'include',  
     body: JSON.stringify(userData),
   });
 
@@ -31,7 +29,7 @@ export const signup = async (userData: {
   localStorage.setItem("user_avatar", data.avatar);
   localStorage.setItem("isAdmin", "false");
 
-  return data; // user info, but no token
+  return data;
 };
 
 export const AdminSignup = async (userData: {
@@ -48,7 +46,7 @@ export const AdminSignup = async (userData: {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',     // send/receive cookies
+    credentials: 'include',
     body: JSON.stringify(userData),
   });
 
@@ -62,16 +60,15 @@ export const AdminSignup = async (userData: {
   localStorage.setItem("username", data.username)
   localStorage.setItem("user_avatar", data.avatar);
 
-  return data; // user info, but no token
+  return data; 
 };
 
 
-// LOGIN
 export const login = async (credentials: { email: string; password: string }) => {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',      // IMPORTANT: cookie arrives here
+    credentials: 'include',
     body: JSON.stringify(credentials),
   });
 
@@ -88,26 +85,21 @@ export const login = async (credentials: { email: string; password: string }) =>
 };
 
 
-// LOGOUT
 export const logout = async () => {
   await fetch(`${API_BASE_URL}/auth/logout`, {
     method: 'POST',
-    credentials: 'include', // ensure cookie removal
+    credentials: 'include',
   });
 };
 
-
-// CHECK AUTH FROM BACKEND
 export const isAuthenticated = async () => {
   const response = await fetch(`${API_BASE_URL}/auth/me`, {
     credentials: 'include',
   });
 
-  return response.ok; // true if authenticated, false if not
+  return response.ok;
 };
 
-
-// FOR CALLING PROTECTED ROUTES
 export const makeAuthenticatedRequest = async (
   url: string,
   options: RequestInit = {}
@@ -118,7 +110,7 @@ export const makeAuthenticatedRequest = async (
       'Content-Type': 'application/json',
       ...(options.headers || {}),
     },
-    credentials: 'include', // send cookie auth
+    credentials: 'include',
   });
 
   return response;

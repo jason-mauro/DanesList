@@ -1,4 +1,3 @@
-/* Layout wrapper */
 .dl-layout {
   display: flex;
   min-height: 100vh;
@@ -6,8 +5,6 @@
   background-color: #d4d4d4;
 }
 
-
-/* Card grid */
 .dl-card-grid {
   margin-top: 20px;
   display: grid;
@@ -15,7 +12,6 @@
   gap: 20px;
 }
 
-/* Breakpoints */
 @media (max-width: 1200px) {
   .dl-card-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -24,7 +20,7 @@
 
 @media (max-width: 900px) {
   .dl-main {
-    margin-left: 0;        /* Sidebar will slide out / collapse */
+    margin-left: 0; 
   }
 
   .dl-card-grid {
@@ -40,29 +36,26 @@
   padding: 16px 28px 24px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* center the wrapper */
+  align-items: center;
 }
 
-/* Shared width wrapper for all centered content */
 .dl-content-wrapper {
   width: 100%;
-  max-width: 1200px; /* Match the listing grid width */
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-/* Remove the old manual offset */
 .dl-top-controls {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding-left: 0; /* remove this */
+  padding-left: 0; 
 }
 
-/* Grid stays full width inside the wrapper */
 .dl-card-grid {
   margin-top: 20px;
   display: grid;
@@ -72,7 +65,7 @@
 }
 
 .loading-spinner-wrapper {
-  grid-column: 1 / -1; /* Make it span the entire grid width */
+  grid-column: 1 / -1;
   display: flex;
   justify-content: center;
   align-items: center;

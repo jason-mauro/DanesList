@@ -123,7 +123,6 @@ export const CreateListing: React.FC = () => {
         toast={toast}
         onClose={() => setToast(null)}
     />
-        {/* LAYOUT CONTAINER */}
       <div className="dl-layout">
         <Sidebar
           isOpen={sidebarOpen}

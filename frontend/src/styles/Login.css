@@ -1,4 +1,3 @@
-/* Remove the checkmark for valid fields */
 .was-validated .form-control:valid {
     background-image: none !important;
   }

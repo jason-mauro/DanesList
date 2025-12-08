@@ -11,13 +11,6 @@ type ConversationThreadProps = {
 export const ConversationThread: React.FC<ConversationThreadProps> = ({
   newMessageTo
 }) => {
-  // if (!conversation) {
-  //   return (
-  //     <div className="messages-thread empty">
-  //       Select conversation to view messages..
-  //     </div>
-  //   );
-  // }
   const navigate = useNavigate();
   const {messages, setMessages, setSelectedConversation, selectedConversation} = useConversation();
   const [messageContent, setMessageContent] = useState("");

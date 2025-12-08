@@ -7,12 +7,12 @@ type Option = {
 };
 
 type FiltersProps = {
-  categories?: string[];               // optional array of categories
-  selectedCategory: string;            // currently selected category
+  categories?: string[];               
+  selectedCategory: string;           
   onCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 
-  sortOptions?: Option[];              // optional array of sort options
-  selectedSort: string;                // selected sort value
+  sortOptions?: Option[];              
+  selectedSort: string;              
   onSortChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
@@ -51,7 +51,6 @@ export const Filters: React.FC<FiltersProps> = ({
     <section className="dl-filters">
 
       <div className="dl-filter-row">
-        {/* CATEGORY SELECT */}
         <div className="dl-filter-group">
           <label className="dl-filter-label">Browse By Category</label>
           <div className="dl-select">
@@ -65,8 +64,6 @@ export const Filters: React.FC<FiltersProps> = ({
             <span className="dl-select-caret">▾</span>
           </div>
         </div>
-
-        {/* SORT SELECT */}
         <div className="dl-filter-group">
           <label className="dl-filter-label">Sort By</label>
           <div className="dl-select">

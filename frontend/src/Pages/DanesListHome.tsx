@@ -34,7 +34,7 @@ export const DanesListHome: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1);
   };
 
   const handleCategoryChange = (
@@ -66,13 +66,10 @@ export const DanesListHome: React.FC = () => {
     fetchCategories();
   }, [])
 
-  // TODO: Finish fetching and setting the listing data for the page
   useEffect(() => {
       if (!pageListings[currentPage-1]){
         setLoading(true)
       }
-      // For now, we just fetch all lisitngs every time since we have a small dataset and set pages with that
-      // For future, we would cache pages, etc.. so we dont load too many at a time.
       const fetchData = async () => {
         try {
           const response = await axios.get(

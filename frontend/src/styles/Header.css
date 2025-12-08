@@ -1,4 +1,3 @@
-/* Header container */
 .dl-header {
   display: flex;
   justify-content: center;
@@ -8,10 +7,9 @@
   z-index: 10;
 }
 
-/* Keep logo at a fixed size */
 .dl-logo-img {
-  height: 200px;         /* perfect size for your layout */
-  width: auto;          /* keeps natural aspect ratio */
+  height: 200px;     
+  width: auto;       
   object-fit: contain;
   display: block;
 }

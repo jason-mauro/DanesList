@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect} from "react";
 import type {ReactNode } from "react";
 import type { ConversationData, MessageData } from "../types/messages.types";
-import { useSocketContext } from "./SocketContext"; // Import your socket context
+import { useSocketContext } from "./SocketContext";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
@@ -71,7 +71,6 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
         fetchData();
       }, [user, selectedConversation]);
 
-    // Listen for new messages via socket
     useEffect(() => {
         if (!socket) return;
 
@@ -81,10 +80,9 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
             sender: string;
             createdAt: string;
         }) => {
-            // If message is for the currently open conversation, add it to messages
             if (selectedConversation?.conversationId === data.conversationId) {
                 const newMessage: MessageData = {
-                    _id: Date.now().toString(), // Temp ID
+                    _id: Date.now().toString(),
                     conversationId: data.conversationId,
                     senderId: data.sender,
                     message: data.message,
@@ -95,7 +93,6 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
                 };
                 setMessages(prev => [...prev, newMessage]);
             } else {
-                // Message is for a different conversation - increment unread count
                 setConversations(prev => prev.map(conv => 
                     conv.conversationId === data.conversationId
                         ? { 
@@ -118,14 +115,10 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
         };
     }, [socket, selectedConversation]);
 
-
-
-    // Mark conversation as read
     const markConversationAsRead = async (conversationId: string) => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/messages/conversations/${conversationId}/read`, {}, {withCredentials:true});
 
-            // Clear unread count locally
             setConversations(prev => prev.map(conv => 
                 conv.conversationId === conversationId
                     ? { ...conv, unreadCount: 0 }
@@ -141,7 +134,6 @@ export const ConversationProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    // Auto-mark as read when selecting a conversation
     useEffect(() => {
         if (selectedConversation?.conversationId) {
             markConversationAsRead(selectedConversation.conversationId);

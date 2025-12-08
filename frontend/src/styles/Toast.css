@@ -1,4 +1,3 @@
-/* The portal wrapper */
 .toast-portal-container {
   position: fixed;
   bottom: 32px;
@@ -10,7 +9,6 @@
   pointer-events: none;
 }
 
-/* Actual toast bubble */
 .toast {
   background: #111827;
   color: white;
@@ -27,12 +25,10 @@
   pointer-events: auto;
 }
 
-/* SUCCESS version */
 .toast.success {
   background: #16a34a;
 }
 
-/* ERROR version */
 .toast.error {
   background: #dc2626;
 }
