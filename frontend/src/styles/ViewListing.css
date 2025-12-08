@@ -7,6 +7,7 @@
   align-items: flex-start; /* keep content at top */
   width: 100%;
   box-sizing: border-box;
+  padding-top: 80px;
 }
 
 /* Main form-like container */
@@ -402,4 +403,28 @@
 }
 .vl-report-btn:hover {
   background: #c9302c;
+}
+
+.vl-back-btn {
+  position: absolute;
+  top: 20px;
+  z-index: 10;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 16px;
+  cursor: pointer;
+  transition: left 0.3s ease;
+}
+
+.vl-back-btn.sidebar-open {
+  left: 300px; /* Adjust based on actual sidebar width */
+}
+
+.vl-back-btn.sidebar-closed {
+  left: 100px;
+}
+
+.vl-back-btn:hover {
+  color: #555;
 }

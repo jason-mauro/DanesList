@@ -127,18 +127,15 @@ export const ViewListing: React.FC = () => {
       }
     };
     
-
-
   return (
     <div className="dl-layout viewlisting-bg">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       {loading ? <LoadingSpinner size="small"/> : error ? <p>Error: {error} </p> : !data ? <p>No listing found.</p> :
       <main className="dl-main">
+        <button className={`vl-back-btn ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`} onClick={() => navigate(-1)}>  ← Back </button>
       <div className="vl-page">
-        
         {/* FORM CONTAINER */}
         <div className="vl-container">
-
           <div className="vl-image-wrapper">
           <img src={data.images[0]} alt={data.title} className="vl-image" />
             {/* FAVORITE BUTTON */}
