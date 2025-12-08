@@ -1,4 +1,3 @@
-// src/Components/ReportGrid.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ListingGrid.css";

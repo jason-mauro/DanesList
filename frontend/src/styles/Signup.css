@@ -1,6 +1,3 @@
-/* Signup.css */
-
-/* Remove Bootstrap's default checkmark and icons */
 .was-validated .form-control:valid {
   background-image: none !important;
 }
@@ -9,7 +6,6 @@
   background-image: none !important;
 }
 
-/* Fix floating label spacing in side-by-side inputs */
 .row .form-floating > .form-control {
   height: calc(3.5rem + 2px);
   padding-top: 1.5rem;

@@ -20,7 +20,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const update = () => {
     const latest = JSON.parse(localStorage.getItem("user") || "{}");
     setCurrentUser(latest);
-    forceUpdate(); // Optional: may not be needed if setCurrentUser triggers re-render
+    forceUpdate();
   };
 
   window.addEventListener("storage", update);
@@ -37,28 +37,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const {unreadCount} = useConversation();
   const handleSignOut = async () => {
     try {
-      // Call logout API to clear token from localStorage
       await logout();
       
-      // Navigate to login page
       navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
-      // Even if API call fails, still clear local data and redirect
       localStorage.removeItem('username');
       localStorage.removeItem("userId")
       navigate("/login");
     }
   };
-
-  // Get user info from localStorage to display
   const [currentUser, setCurrentUser] = React.useState(() => {
   return JSON.parse(localStorage.getItem("user") || "{}");
 });
 
   return (
     <aside className={`dl-sidebar ${isOpen ? "open" : "closed"}`}>
-      {/* Hamburger in top-right, NOT wrapped in tooltip */}
       <button className="dl-sidebar-hamburger" onClick={onToggle}> 
         ☰
       </button>
@@ -85,10 +79,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             <span className="dl-tooltip-text">Create Listing</span>
             </div>
         </Link>
-
-
-        {/* TODO make a page that sends you to your listings, similar to favorite listings */}
-        {/* Then when they click a listing from there, send them to manage listing for that specific listing */}
 
         <Link to="/manageListings" className="sidebar-link">
             <div className="dl-tooltip">

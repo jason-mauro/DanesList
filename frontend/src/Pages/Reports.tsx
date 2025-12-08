@@ -1,9 +1,9 @@
-// src/Pages/Reports.tsx
+
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "../Components/Sidebar";
 import axios from "axios";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import "../styles/Favorites.css"; // simple grid layout reused
+import "../styles/Favorites.css";
 import { ReportGrid } from "../Components/ReportGrid";
 import type { ListingReportData } from "../types/reports.types";
 

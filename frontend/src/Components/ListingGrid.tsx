@@ -1,4 +1,3 @@
-// src/Components/ListingGrid.tsx
 import React from "react";
 import "../styles/ListingGrid.css";
 import type {ListingData} from "../types/listing.types";

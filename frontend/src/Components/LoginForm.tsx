@@ -35,12 +35,9 @@ const LoginScreen = () => {
       const response = await login({ email, password });
       console.log("Login successful:", response);
       
-      // Store user data if needed
       localStorage.setItem('user', JSON.stringify(response));
       await refreshUser();
     
-      
-      // Navigate to home page
       navigate('/home');
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");

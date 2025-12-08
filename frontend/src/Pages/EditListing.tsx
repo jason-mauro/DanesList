@@ -83,20 +83,12 @@ export const EditListing: React.FC = () => {
       <main className="dl-main">
         <button className={`vl-back-btn ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}  onClick={() => navigate(-1)}>  ← Back </button>
         <div className="vl-page">
-          {/* FORM CONTAINER */}
           <div className="vl-container">
-            {/* MAIN LISTING IMAGE */}
             <div className={`vl-image-wrapper ${data.isSold ? "sold" : ""}`}>
                 <img src={data.images[0]} alt={data.title} className="vl-image" />
                 {data.isSold && <div className="vl-sold-banner">SOLD</div>}
             </div>
-
-
-
-            {/* TITLE */}
             <h1 className="vl-title">{data.title}</h1>
-
-            {/* TAGS */}
             <div className="vl-tags">
               {data.categories.map((tag, i) => (
                 <span key={i} className="vl-tag">
@@ -104,19 +96,13 @@ export const EditListing: React.FC = () => {
                 </span>
               ))}
             </div>
-
-            {/* PRICE */}
             <div className="vl-price">${data.price}</div>
 
             <p className="vl-status-label">Listing Status</p>
-
-            {/* DESCRIPTION */}
             <div className="vl-section">
               <h2>Description</h2>
               <p>{data.description}</p>
             </div>
-
-            {/* SELLER INFO */}
             <div className="vl-section">
               <h2>Seller Information</h2>
 
@@ -127,8 +113,6 @@ export const EditListing: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            {/* CONFIRMATION PAGE BUTTONS */}
             <div className="vl-confirm-buttons">
             <button className="vl-btn-edit" onClick={() => setShowEditPopup(true)}>
               Modify Listing

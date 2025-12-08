@@ -1,4 +1,3 @@
-/* Page Title */
 .cl-title {
   font-size: 45px;
   font-weight: 700;
@@ -7,7 +6,6 @@
   padding-bottom: 25px;
 }
 
-/* Main form container */
 .cl-form-container {
   background: white;
   padding: 24px;
@@ -18,7 +16,6 @@
   margin: 0 auto;
 }
 
-/* Input fields */
 .cl-field {
   margin-bottom: 18px;
   display: flex;
@@ -156,12 +153,10 @@
   resize: vertical;
 }
 
-/* Upload section wrapper */
 .cl-upload-wrapper {
   margin-bottom: 20px;
 }
 
-/* Submit button */
 .cl-submit-btn {
   width: 100%;
   padding: 12px;

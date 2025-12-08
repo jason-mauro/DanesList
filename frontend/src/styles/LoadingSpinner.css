@@ -1,4 +1,3 @@
-/* Full page overlay */
 .loading-overlay {
     position: fixed;
     inset: 0;
@@ -17,7 +16,6 @@
     gap: 16px;
   }
   
-  /* Inline container */
   .loading-container {
     display: flex;
     flex-direction: column;
@@ -29,7 +27,6 @@
     min-height: 200px;
   }
   
-  /* Spinner */
   .loading-spinner {
     position: relative;
     display: inline-block;
@@ -84,7 +81,6 @@
     }
   }
   
-  /* Loading text */
   .loading-text {
     font-size: 16px;
     font-weight: 500;
@@ -102,7 +98,6 @@
     }
   }
   
-  /* Dark background variant */
   .loading-overlay.dark {
     background: rgba(0, 0, 0, 0.85);
   }

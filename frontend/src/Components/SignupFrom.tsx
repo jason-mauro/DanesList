@@ -10,8 +10,6 @@ interface SignupProps {
   isAdmin?: boolean;
 }
 
-
-
 const SignupScreen = ({isAdmin = false}: SignupProps) => {
   const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
@@ -65,10 +63,8 @@ const SignupScreen = ({isAdmin = false}: SignupProps) => {
       }
       console.log("Signup successful:", response);
       
-      // Store user data if needed
       localStorage.setItem('user', JSON.stringify(response));
       await refreshUser();
-      // Navigate to home page
       navigate('/home');
     } catch (err: any) {
       setError(err.message || "Signup failed. Please try again.");

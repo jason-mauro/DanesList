@@ -1,4 +1,3 @@
-/* Search bar */
 .dl-search-section {
   margin-top: 24px;
 }
@@ -33,8 +32,8 @@
 }
 
 .sidebar-link {
-  text-decoration: none;   /* remove underline */
-  color: inherit;          /* use the button text color instead of blue */
-  display: block;          /* make the whole button clickable */
+  text-decoration: none;   
+  color: inherit;         
+  display: block;         
   width: 100%;
 }

@@ -22,13 +22,9 @@ export const NewMessage: React.FC = () => {
 
       <main className="dl-main messages-main">
         <div className="messages-container">
-
-          {/* LEFT COLUMN — LIST */}
           <ConversationList
             onSelect={setSelectedConversation}
           />
-
-          {/* RIGHT COLUMN — THREAD */}
           <ConversationThread newMessageTo={recepient} />
 
         </div>

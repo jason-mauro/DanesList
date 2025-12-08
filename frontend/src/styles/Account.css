@@ -74,7 +74,7 @@
 }
 
 .account-field input {
-  padding-right: 2.5rem !important; /* ensure text doesn't collide with icon */
+  padding-right: 2.5rem !important;
 }
 
 .upload-btn {
