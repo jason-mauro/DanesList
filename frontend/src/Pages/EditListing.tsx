@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Sidebar } from "../Components/Sidebar";
-import "../styles/ViewListing.css"; // reuse same styling
+import "../styles/ViewListing.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import type { ListingData } from "../types/listing.types";
@@ -81,6 +81,7 @@ export const EditListing: React.FC = () => {
       />
       {loading ? <LoadingSpinner size="small" /> : !data ? <p>No listing found.</p> :  
       <main className="dl-main">
+        <button className={`vl-back-btn ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}  onClick={() => navigate(-1)}>  ← Back </button>
         <div className="vl-page">
           {/* FORM CONTAINER */}
           <div className="vl-container">
