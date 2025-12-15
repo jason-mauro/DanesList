@@ -36,7 +36,7 @@ git clone <repository-url>
 cd <project-directory>
 ```
 
-### 2. Backend Setup (Spring Boot)
+### 2. Backend Setup (Express)
 
 Navigate to the backend directory:
 
