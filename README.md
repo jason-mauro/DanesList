@@ -18,7 +18,7 @@ npm -version
 project-root/
 ├── backend/          # Express Backend
 │   ├── src/
-│   ├── pom.xml
+│   ├── package.json
 │   └── ...
 ├── frontend/         # React + Vite application
 │   ├── src/
